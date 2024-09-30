@@ -148,7 +148,7 @@ HRESULT ZFXD3DVCache::Flush(bool bUseShaders)
 		ZFXMATERIAL* pMat = &m_pSkinMan->m_pMaterials[m_Skin.nMaterial];
 
 		// WIREFRAME-MODE; SPECIAL CASE
-		if (!m_pDad->GetZFXD3D()->GetWireFrameMode()) {
+		if (!m_pDad->GetZFXD3D()->GetShadeMode() == RS_SHADE_SOLID) {
 			// set the material
 			D3DMATERIAL9 mat = {
 				pMat->cDiffuse.fR,	pMat->cDiffuse.fG,
@@ -490,12 +490,12 @@ HRESULT ZFXD3DVCManager::Render(UINT nID)
 	// skin already active?
 	if (m_pZFXD3D->GetActiveSkinID() != m_pSB[nID].nSkinID) {
 		// mark as active noew
-		ZFXSKIN* pSkin = &m_pSkinMan->m_pSkins[m_pSB[nID].nSkinID];
+		ZFXSKIN* pSkin = &m_pSkinMan->GetSkin(m_pSB[nID].nSkinID);
 
 		// SPECIAL CASE WIREFRAME-MODE
 		if (sm == RS_SHADE_SOLID) {
 			// set material with wireframe color
-			ZFXMATERIAL* pMat = &m_pSkinMan->m_pMaterials[pSkin->nMaterial];
+			ZFXMATERIAL* pMat = &m_pSkinMan->GetMaterial(pSkin->nMaterial);
 			D3DMATERIAL9 mat = {
 				pMat->cDiffuse.fR,	pMat->cDiffuse.fG,
 				pMat->cDiffuse.fB,	pMat->cDiffuse.fA,
@@ -512,7 +512,7 @@ HRESULT ZFXD3DVCManager::Render(UINT nID)
 			for (int i = 0; i < 8; ++i)
 			{
 				if (pSkin->nTexture[i] != MAX_ID)
-					m_pDevice->SetTexture(i, (LPDIRECT3DTEXTURE9)m_pSkinMan->m_pTextures[pSkin->nTexture[i]].pData);
+					m_pDevice->SetTexture(i, (LPDIRECT3DTEXTURE9)m_pSkinMan->GetTexture(pSkin->nTexture[i]).pData);
 			}
 		}
 		else {

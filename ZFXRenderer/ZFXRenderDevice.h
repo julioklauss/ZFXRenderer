@@ -95,6 +95,9 @@ class ZFXRenderDevice
 		// world coordinates to screen coordinates
 		virtual POINT	Transform3DTo2D(const ZFXVector& vcP) = 0;
 
+		// set world transformation matrix or NULL
+		virtual void	SetWorldTransform(const ZFXMatrix*) = 0;
+
 		// SHADER STUFF:
 		// ----------------
 		virtual HRESULT CreateVShader(const void*, UINT, bool, bool, UINT*) = 0;

@@ -26,10 +26,14 @@ class ZFXD3DSkinManager : public ZFXSkinManager
 			DWORD dwNumColorKeys);
 
 		HRESULT AddTextureHeightmapAsBump(UINT nSkinID, const char* chName);
+		HRESULT	ConvertToNormalMap(ZFXTEXTURE* pTexture);
+		DWORD	VectorToRGBA(ZFXVector* vc, float fHeight);
+
 		bool	MaterialEqual(const ZFXMATERIAL* pMat0, const ZFXMATERIAL* pMat1);
 
 		ZFXSKIN		GetSkin(UINT nSkinID);
 		ZFXMATERIAL GetMaterial(UINT nMatID);
+		ZFXTEXTURE	GetTexture(UINT nTexID);
 		const char* GetTextureName(UINT nTextID, float* pfAlpha, ZFXCOLOR* pAK, UCHAR* pNum);
 		void		LogCurrentStatusChar(char* chLog, bool bDetailed) {};
 	protected:

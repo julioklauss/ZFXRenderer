@@ -52,9 +52,7 @@
     <None Include="ZFXD3D.def">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="dlgChangeDevice.aps" />
     <None Include="RCa09132" />
-    <None Include="ZFXD3D.APS" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dlgChangeDevice.rc">

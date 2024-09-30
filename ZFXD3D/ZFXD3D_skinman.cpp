@@ -5,6 +5,7 @@
 
 static ZFXMATERIAL EmptyMaterial;
 static ZFXSKIN EmptySkin;
+static ZFXTEXTURE EmptyTexture;
 
 bool g_bLF;
 
@@ -116,6 +117,15 @@ ZFXMATERIAL ZFXD3DSkinManager::GetMaterial(UINT nMatID)
 		return EmptyMaterial;
 	}
 }	// GetMaterial
+/*---------------------------------------------------------*/
+
+ZFXTEXTURE ZFXD3DSkinManager::GetTexture(UINT nTexID)
+{
+	if (nTexID < m_nNumTextures)
+		return m_pTextures[nTexID];
+	else
+		return EmptyTexture;
+}	//	GetTexture
 /*---------------------------------------------------------*/
 
 const char* ZFXD3DSkinManager::GetTextureName(UINT nID, float* pfAlpha, ZFXCOLOR* pAK, UCHAR* pNum)
@@ -284,6 +294,62 @@ HRESULT ZFXD3DSkinManager::AddTexture(UINT nSkinID, const char* chName, bool bAl
 }	//	AddTexture
 /*---------------------------------------------------------*/
 
+HRESULT	ZFXD3DSkinManager::ConvertToNormalMap(ZFXTEXTURE* pTexture)
+{
+	HRESULT				hr = ZFX_OK;
+	D3DLOCKED_RECT		d3dRect;
+	D3DSURFACE_DESC		desc;
+	LPDIRECT3DTEXTURE9	pTex = ((LPDIRECT3DTEXTURE9)pTexture->pData);
+
+	if (FAILED(pTex->LockRect(0, &d3dRect, NULL, 0)))
+		return ZFX_BUFFERLOCK;
+
+	// pointer on pixel data
+	DWORD* pPixel = (DWORD*)d3dRect.pBits;
+
+	// build normal vector for each pixel
+	for (DWORD i = 0; i < desc.Width; ++i)
+	{
+		for (DWORD j = 0; j < desc.Height; ++j)
+		{
+			DWORD color00 = pPixel[0];
+			DWORD color10 = pPixel[1];
+			DWORD color01 = pPixel[d3dRect.Pitch / sizeof(DWORD)];
+
+			float fHeight00 = (float)((color00 & 0x00ff0000) >> 16) / 255.0f;
+			float fHeight10 = (float)((color10 & 0x00ff0000) >> 16) / 255.0f;
+			float fHeight01 = (float)((color01 & 0x00ff0000) >> 16) / 255.0f;
+
+			ZFXVector vcPoint00(i + 0.0f, j + 0.0f, fHeight00);
+			ZFXVector vcPoint10(i + 1.0f, j + 0.0f, fHeight10);
+			ZFXVector vcPoint01(i + 0.0f, j + 1.0f, fHeight01);
+			ZFXVector vc10 = vcPoint10 - vcPoint00;
+			ZFXVector vc01 = vcPoint01 - vcPoint00;
+
+			ZFXVector vcNormal;
+			vcNormal.Cross(vc10, vc01);
+			vcNormal.Normalize();
+
+			*pPixel++ = VectorToRGBA(&vcNormal, fHeight00);
+		}
+	}
+
+	pTex->UnlockRect(0);
+	return ZFX_OK;
+}	//	ConvertToNormalMap
+/*---------------------------------------------------------*/
+
+DWORD ZFXD3DSkinManager::VectorToRGBA(ZFXVector* vc, float fHeight)
+{
+	DWORD r = (DWORD)(127.0f * vc->x + 128.0f);
+	DWORD g = (DWORD)(127.0f * vc->y + 128.0f);
+	DWORD b = (DWORD)(127.0f * vc->z + 128.0f);
+	DWORD a = (DWORD)(127.0f * fHeight);
+
+	return (a << 24) + (r << 16) + (g << 8) + (b << 0);
+}	//	VectorToRGBA
+/*---------------------------------------------------------*/
+
 HRESULT ZFXD3DSkinManager::AddTextureHeightmapAsBump(UINT nSkinID, const char* chName)
 {
 	ZFXTEXTURE* pZFXTex = NULL;
@@ -337,7 +403,7 @@ HRESULT ZFXD3DSkinManager::AddTextureHeightmapAsBump(UINT nSkinID, const char* c
 		}
 
 		// build normals from  heightvalues
-		hr = ConvertToNormalmap(&m_pTextures[m_nNumTextures]);
+		hr = ConvertToNormalMap(&m_pTextures[m_nNumTextures]);
 		if (FAILED(hr)) {
 			Log("error: ConvertToNormalmap() failed");
 			return hr;
@@ -395,7 +461,7 @@ HRESULT ZFXD3DSkinManager::CreateTexture(ZFXTEXTURE* pTexture, bool bAlpha)
 	// set dummy pointer
 	LPDIRECT3DTEXTURE9 pTex = ((LPDIRECT3DTEXTURE9)pTexture->pData);
 	if (FAILED(pTex->LockRect(0, &d3dRect, NULL, 0)))
-		return ZFX_BUFFERCLOCK;
+		return ZFX_BUFFERLOCK;
 
 	if (bAlpha) {
 		LineWidth = d3dRect.Pitch >> 2;		// 32 Bit = 4 Byte
@@ -468,7 +534,7 @@ HRESULT ZFXD3DSkinManager::SetAlphaKey(LPDIRECT3DTEXTURE9* ppTexture, UCHAR R, U
 	else Color = MakeD3DColor(0, 0, 0, A);
 	
 	if (FAILED((*ppTexture)->LockRect(0, &d3dRect, NULL, 0)))
-		return ZFX_BUFFERCLOCK;
+		return ZFX_BUFFERLOCK;
 
 	// overwrite all pixels to be replaced
 	for (DWORD y = 0; y < d3dDesc.Height; ++y)
@@ -500,7 +566,7 @@ HRESULT ZFXD3DSkinManager::SetTransparency(LPDIRECT3DTEXTURE9* ppTexture, UCHAR 
 		return ZFX_INVALIDPARAM;
 
 	if (FAILED((*ppTexture)->LockRect(0, &d3dRect, NULL, 0)))
-		return ZFX_BUFFERCLOCK;
+		return ZFX_BUFFERLOCK;
 
 	// loop through all pixels
 	for (DWORD y = 0; y < d3dDesc.Height; ++y) {

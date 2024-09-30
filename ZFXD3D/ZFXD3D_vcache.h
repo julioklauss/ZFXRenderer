@@ -20,6 +20,13 @@ typedef struct ZFXSTATICBUFFER_TYPE
 	LPDIRECT3DINDEXBUFFER9	pIB;
 } ZFXSTATICBUFFER;
 
+typedef struct ZFXINDEXBUFFER_TYPE
+{
+	int		nNumIndis;
+	int		nNumTris;
+	LPDIRECT3DINDEXBUFFER9	pIB;
+} ZFXINDEXBUFFER;
+
 class ZFXD3DVCache
 {
 	public:
@@ -46,6 +53,7 @@ class ZFXD3DVCache
 		ZFXSKIN					m_Skin;
 		UINT					m_SkinID;
 		DWORD					m_dwID;
+		DWORD					m_dwFVF;
 		FILE*					m_pLog;
 
 		UINT	m_nNumVertsMax;		// max, vertices in the buffer
@@ -66,11 +74,12 @@ class ZFXD3DVCManager : public ZFXVertexCacheManager
 		HRESULT Render(ZFXVERTEXID VertexID, UINT nVerts, UINT nIndis, const void* pVerts, const WORD* pIndis, UINT SkinID);
 
 		HRESULT Render(UINT nSBufferID);
-		HRESULT ForcedFlushAll(void);
-		HRESULT ForcedFlush(ZFXVERTEXID VertexID);
-
 		HRESULT RenderPoints(ZFXVERTEXID VID, UINT nVerts, const void* pVerts, const ZFXCOLOR* pClr);
 		HRESULT RenderLines(ZFXVERTEXID VID, UINT nVerts, const void* pVerts, const ZFXCOLOR* pClr, bool bStrip);
+		HRESULT RenderLine(const float* fStart, const float* fEnd, const ZFXCOLOR* pClr);
+
+		HRESULT ForcedFlushAll(void);
+		HRESULT ForcedFlush(ZFXVERTEXID VertexID);
 
 		DWORD	GetActiveCache(void)		{ return m_dwActiveCache; }
 		void	SetActiveCache(DWORD dwID)	{ m_dwActiveCache = dwID; }
@@ -78,17 +87,22 @@ class ZFXD3DVCManager : public ZFXVertexCacheManager
 
 		void	InvalidateStates(void);
 
+		ZFXRENDERSTATE GetShadeMode(void);
+
 	private:
 		ZFXD3DSkinManager*	m_pSkinMan;
 		LPDIRECT3DDEVICE9	m_pDevice;
 		ZFXD3D*				m_pZFXD3D;
 
 		ZFXSTATICBUFFER*	m_pSB;
+		ZFXINDEXBUFFER*		m_pIB;
 		UINT				m_nNumSB;
+		UINT				m_nNumIB;
 		ZFXD3DVCache*		m_CacheUU[NUM_CACHES];
 		ZFXD3DVCache*		m_CacheUL[NUM_CACHES];
 		DWORD				m_dwActiveCache;
 		DWORD				m_dwActiveSB;
+		DWORD				m_DwActiveIB;
 		FILE*				m_pLog;
 };	//	class
 

@@ -354,6 +354,82 @@ HRESULT ZFXD3D::Go(void)
 	return OneTimeInit();
 } // Go
 
+HRESULT ZFXD3D::InitWindowed(HWND hWnd, const HWND* hWnd3D, int nNumhWnd, bool bSaveLog)
+{
+	HRESULT	hr;
+	HWND	hwnd;
+
+	// are there any child windows?
+	if (nNumhWnd > 0) {
+		if (nNumhWnd > MAX_3DHWND)
+			nNumhWnd = MAX_3DHWND;
+		memcpy(&m_hWnd[0], hWnd, sizeof(HWND) * nNumhWnd);
+		m_nNumhWnd = nNumhWnd;
+	}
+	// else store handle to main window at least
+	else {
+		m_hWnd[0] = hWnd;
+		m_nNumhWnd = 0;
+	}
+
+	m_hWndMain = hWnd;
+	m_bWindowed = true;
+
+	// build main direct3d object
+	if (!m_pD3D) {
+		m_pD3D->Release();
+		m_pD3D = NULL;
+	}
+	m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
+	if (!m_pD3D) {
+		Log("error: Direct3DCreate9()");
+		return ZFX_CREATEAPI;
+	}
+
+	// prepare present parameters structure
+	ZeroMemory(&m_d3dpp, sizeof(m_d3dpp));
+	m_d3dpp.Windowed				= m_bWindowed;
+	m_d3dpp.BackBufferCount			= 1;
+	m_d3dpp.BackBufferFormat		= D3DFMT_X8R8G8B8;
+	m_d3dpp.EnableAutoDepthStencil	= TRUE;
+	m_d3dpp.AutoDepthStencilFormat	= D3DFMT_D16;
+	m_d3dpp.MultiSampleType			= D3DMULTISAMPLE_NONE;
+	m_d3dpp.SwapEffect				= D3DSWAPEFFECT_DISCARD;
+	m_bStencil						= false;
+
+	// windowed mode
+	m_d3dpp.hDeviceWindow = hwnd = m_hWnd[0];
+	m_d3dpp.BackBufferWidth = GetSystemMetrics(SM_CXSCREEN);
+	m_d3dpp.BackBufferHeight = GetSystemMetrics(SM_CYSCREEN);
+
+	// create direct3d device
+	hr = m_pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hwnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &m_d3dpp, &m_pDevice);
+
+	// create additional swap chains if wished and possible
+	if ((m_nNumhWnd > 0) && m_bWindowed) {
+		for (UINT i = 0; i < m_nNumhWnd; ++i)
+		{
+			m_d3dpp.hDeviceWindow = m_hWnd[i];
+			m_pDevice->CreateAdditionalSwapChain(&m_d3dpp, &m_pChain[i]);
+		}
+	}
+
+	if (FAILED(hr)) {
+		Log("error: IDirect3D::CreateDevice()");
+		return ZFX_CREATEDEVICE;
+	}
+
+	Log("initialized (online and ready)");
+	m_pDevice->GetDeviceCaps(&g_xDevice.d3dCaps);
+
+	m_bRunning			= true;
+	m_bIsScreenRunning	= false;
+	m_dwWidth			= m_d3dpp.BackBufferWidth;
+	m_dwHeight			= m_d3dpp.BackBufferHeight;
+
+	return OneTimeInit();
+}
+
 HRESULT ZFXD3D::OneTimeInit(void)
 {
 	ZFX3DInitCPU();

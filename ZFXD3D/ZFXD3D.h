@@ -10,6 +10,8 @@
 #define MAX_3DHWND 8
 #define MAX_SHADER 20
 
+#define IDENTITY(m) { memset(&m, 0, sizeof(D3DMATRIX)); m._11 = m._22 = m._33 = m._44 = 1.0f; }
+
 // vertex type definitions
 #define FVF_VERTEX ( D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1 )
 #define FVF_LVERTEX ( D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1 )

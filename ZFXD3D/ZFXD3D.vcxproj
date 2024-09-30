@@ -172,9 +172,7 @@
     <ClCompile Include="ZFXD3D_vcache.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="dlgChangeDevice.aps" />
     <None Include="RCa09132" />
-    <None Include="ZFXD3D.APS" />
     <None Include="ZFXD3D.def" />
   </ItemGroup>
   <ItemGroup>

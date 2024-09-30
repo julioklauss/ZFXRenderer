@@ -743,7 +743,7 @@ HRESULT ZFXD3D::ActivatePShader(UINT nID)
 		return ZFX_INVALIDID;
 
 	// write out vertex caches
-	m_pVertexMan->ForcesFlushAll();
+	m_pVertexMan->ForcedFlushAll();
 
 	if (FAILED(m_pDevice->SetPixelShader(m_pPShader[nID])))
 		return ZFX_FAIL;
@@ -907,3 +907,39 @@ HRESULT ZFXD3D::DrawText(UINT nID, int x, int y, UCHAR r, UCHAR g, UCHAR b, char
 }	//	DrawText
 /*---------------------------------------------------------*/
 
+void ZFXD3D::UsesAdditiveBlending(bool b) 
+{
+	if (m_bAdditive == b)
+		return;
+
+	// clear all vertex caches
+	m_pVertexMan->ForcedFlushAll();
+	m_pVertexMan->InvalidateStates();
+
+	m_bAdditive = b;
+
+	if (!m_bAdditive) {
+		m_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+		m_pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+		m_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+	}
+}	//	UseAdditiveBlending
+/*---------------------------------------------------------*/
+
+void ZFXD3D::SetAmbientLight(float fRed, float fGreen, float fBlue)
+{
+	// last chance check
+	m_pVertexMan->ForcedFlushAll();
+
+	int nRed = (int)( fRed * 255.0f );
+	int nGreen = (int)(fGreen * 255.0f);
+	int nBlue = (int)(fBlue * 255.0f);
+
+	if (m_bCanDoShaders) {
+		// default setting to use as diffuse vertex color
+		float fCol[4] = { fRed, fGreen, fBlue, 1.0f };
+		m_pDevice->SetVertexShaderConstantF(4, fCol, 1);
+	}
+
+	m_pDevice->SetRenderState(D3DRS_AMBIENT, D3DCOLOR_XRGB(nRed, nGreen, nBlue));
+}

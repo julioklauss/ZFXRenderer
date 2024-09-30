@@ -35,6 +35,6 @@ class ZFXSkinManager
 		virtual ZFXSKIN		GetSkin(UINT nSkinID) = 0;
 		virtual ZFXMATERIAL	GetMaterial(UINT nMatID) = 0;
 		virtual const char* GetTextureName(UINT nTextID, float* pfAlpha, ZFXCOLOR* pAK, UCHAR* pNum) = 0;
-		virtual void		LogCurrentStatus(char* chLog, bool bDetail) = 0;
+		// virtual void		LogCurrentStatus(char* chLog, bool bDetail) = 0;
 };
 #endif

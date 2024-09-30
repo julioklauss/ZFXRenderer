@@ -14,13 +14,13 @@ class ZFXVertexCacheManager
 
 		virtual HRESULT	Render(UINT nID) = 0;
 
-		virtual HRESULT ForcedFlushAll(void) = 0;
-
-		virtual HRESULT ForcedFlush(ZFXVERTEXID) = 0;
-
 		virtual HRESULT RenderPoints(ZFXVERTEXID VertexID, UINT nVerts, const void* pVerts, const ZFXCOLOR* pClr) = 0;
 
 		virtual HRESULT RenderLines(ZFXVERTEXID VertexID, UINT nVerts, const void* pVerts, const ZFXCOLOR* pClr, bool bStrip) = 0;
+
+		virtual HRESULT ForcedFlushAll(void) = 0;
+
+		virtual HRESULT ForcedFlush(ZFXVERTEXID) = 0;
 
 		virtual void	InvalidateStates(void) = 0;
 
