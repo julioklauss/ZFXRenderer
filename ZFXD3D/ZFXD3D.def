@@ -1,0 +1,7 @@
+; file: ZFXD3D.def
+; DLL exports the following functions
+LIBRARY "ZFXD3D.dll"
+EXPORTS 
+	CreateRenderDevice
+	ReleaseRenderDevice
+; end of file :-)
