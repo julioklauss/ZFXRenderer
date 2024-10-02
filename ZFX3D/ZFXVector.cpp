@@ -1,5 +1,7 @@
 #include "ZFX3D.h"
 
+extern bool g_bSSE;
+
 float _fabs(float f) 
 {
 	if (f < 0.0f)

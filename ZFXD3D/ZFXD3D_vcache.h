@@ -3,9 +3,11 @@
 
 #include "ZFXD3D.h"
 #include "ZFXD3D_skinman.h"
-#include <ZFX_vcache.h>
 
 #define	NUM_CACHES 10
+
+class ZFXD3DVCManager;
+class ZFXD3DVCache;
 
 typedef struct ZFXSTATICBUFFER_TYPE
 {
@@ -31,7 +33,7 @@ class ZFXD3DVCache
 {
 	public:
 
-		ZFXD3DVCache(UINT nVertsMax, UINT nIndisMax, UINT nStride, ZFXD3DSkinManager* pSkinMan, LPDIRECT3DDEVICE9 pDevice, ZFXD3DVCManager* pDad, DWORD dwID, FILE* pLog);
+		ZFXD3DVCache(UINT nVertsMax, UINT nIndisMax, UINT nStride, ZFXD3DSkinManager* pSkinMan, LPDIRECT3DDEVICE9 pDevice, ZFXD3DVCManager* pDad, DWORD dwID, DWORD dwFVF, FILE* pLog);
 		
 		~ZFXD3DVCache(void);
 

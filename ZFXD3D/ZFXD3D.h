@@ -1,11 +1,8 @@
 #pragma once
 
-#include <Windows.h>
 #include <D3D9.h>
 #include <d3dx9.h>
 #include <ZFXRenderDevice.h>
-#include "ZFX.h"
-
 
 #define MAX_3DHWND 8
 #define MAX_SHADER 20
@@ -141,6 +138,7 @@ class ZFXD3D : public ZFXRenderDevice
 		void	SetActiveSkinID(UINT nID) { m_nActiveSkin = nID; }
 		void	Release(void);
 		bool	IsRunning(void) { return m_bRunning; }
+		void	GetResolution(POINT* pPt) { pPt->x = m_dwWidth; pPt->y = m_dwHeight; }
 		HRESULT BeginRendering(bool, bool, bool);
 		HRESULT Clear(bool, bool, bool);
 		void	EndRendering(void);
@@ -169,7 +167,7 @@ class ZFXD3D : public ZFXRenderDevice
 		bool	UsesShaders(void) { return m_bUseShaders; }
 		void	UsesShaders(bool bUsesShaders) { m_bUseShaders = bUsesShaders; }
 		bool	UsesAdditiveBlending(void) { return m_bAdditive; }
-		void	UsesAdditiveBlending(bool bAdditive) { m_bAdditive = bAdditive; }
+		void	UsesAdditiveBlending(bool bAdditive);
 		bool	CanDoShaders(void) { return m_bCanDoShaders; }
 		void	CanDoShaders(bool bCanDoShaders) { m_bCanDoShaders = bCanDoShaders; }
 

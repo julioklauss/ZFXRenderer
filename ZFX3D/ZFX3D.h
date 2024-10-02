@@ -31,10 +31,6 @@ const float		ZFXEPSILON	= 0.00001f;
 #include <excpt.h>
 //// END INCLUDES
 
-//// GLOBALS
-bool g_bSSE = false;
-//// END GLOBALS
-
 typedef struct CPUINFO_TYP {
 	bool bSSE;			// Streaming SIMD Extensions
 	bool bSSE2;			// Streaming SIMD Extensions 2

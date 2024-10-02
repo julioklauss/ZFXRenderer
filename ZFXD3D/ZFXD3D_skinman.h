@@ -2,7 +2,6 @@
 #define ZFXD3DSKINMAN_H
 
 #include "ZFXD3D.h"
-#include <ZFX_skinman.h>
 
 #define MAX_ID 65535
 

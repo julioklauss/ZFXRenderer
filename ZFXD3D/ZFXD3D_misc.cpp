@@ -396,7 +396,7 @@ POINT ZFXD3D::Transform3DTo2D(const ZFXVector& vcPoint)
 		+ (m_mViewProj._31 * vcPoint.z) + m_mViewProj._41;
 	fYp = (m_mViewProj._12 * vcPoint.x) + (m_mViewProj._22 * vcPoint.y)
 		+ (m_mViewProj._32 * vcPoint.z) + m_mViewProj._42;
-	fXp = (m_mViewProj._14 * vcPoint.x) + (m_mViewProj._24 * vcPoint.y)
+	fWp = (m_mViewProj._14 * vcPoint.x) + (m_mViewProj._24 * vcPoint.y)
 		+ (m_mViewProj._34 * vcPoint.z) + m_mViewProj._44;
 
 	float fWpInv = 1.0f / fWp;
@@ -545,7 +545,7 @@ HRESULT ZFXD3D::CreateVShader(const void* pData, UINT nSize, bool bLoadFromFile,
 	LPD3DXBUFFER	pDebug = NULL;
 	HRESULT			hrC = ZFX_OK, hrA = ZFX_OK;
 	DWORD*			pVS = NULL;
-	HANDLE			hFile, hMap;
+	HANDLE			hFile = NULL, hMap = NULL;
 
 	// is there storage room for one more?
 	if (m_nNumVShaders >= (MAX_SHADER - 1))
@@ -650,7 +650,7 @@ HRESULT ZFXD3D::CreatePShader(const void* pData, UINT nSize, bool bLoadFromFile,
 	LPD3DXBUFFER	pDebug = NULL;
 	HRESULT			hrC = ZFX_OK, hrA = ZFX_OK;
 	DWORD*			pPS = NULL;
-	HANDLE			hFile, hMap;
+	HANDLE			hFile = NULL, hMap = NULL;
 
 	// is there storage room for one more?
 	if (m_nNumPShaders >= (MAX_SHADER - 1))
@@ -888,7 +888,7 @@ HRESULT ZFXD3D::DrawText(UINT nID, int x, int y, UCHAR r, UCHAR g, UCHAR b, char
 
 	// move optional parameters into the string
 	pArgs = (char*)&ch + sizeof(ch);
-	vsprintf(cch, ch, pArgs);
+	vsprintf_s(cch, ch, pArgs);
 	
 	if (nID >= m_nNumFonts) return ZFX_INVALIDPARAM;
 

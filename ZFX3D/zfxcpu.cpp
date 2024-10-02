@@ -1,5 +1,9 @@
 #include "ZFX3D.h"
 
+//// GLOBALS
+extern bool g_bSSE = false;
+//// END GLOBALS
+
 CPUINFO GetCPUInfo() 
 {
 	CPUINFO		info;

@@ -3,11 +3,11 @@
 #define MAX_ID 65535
 #define RGB16BIT(r, g, b) ((b % 32) + ((g % 64) << 5) + ((r % 32) << 11))
 
-static ZFXMATERIAL EmptyMaterial;
-static ZFXSKIN EmptySkin;
-static ZFXTEXTURE EmptyTexture;
+static ZFXMATERIAL	EmptyMaterial = { 0 };
+static ZFXSKIN		EmptySkin = { 0 };
+static ZFXTEXTURE	EmptyTexture = { 0 };
 
-bool g_bLF;
+extern bool g_bLF;
 
 void ZFXD3DSkinManager::Log(const char* chString, ...)
 {
@@ -15,7 +15,7 @@ void ZFXD3DSkinManager::Log(const char* chString, ...)
 	char*	pArgs;
 
 	pArgs = (char*)&chString + sizeof(chString);
-	vsprintf(ch, chString, pArgs);
+	vsprintf_s(ch, chString, pArgs);
 	fprintf(m_pLog, "[ ZFXD3DSkinManager ]: ");
 	fprintf(m_pLog, ch);
 	fprintf(m_pLog, "\n");
@@ -300,6 +300,7 @@ HRESULT	ZFXD3DSkinManager::ConvertToNormalMap(ZFXTEXTURE* pTexture)
 	D3DLOCKED_RECT		d3dRect;
 	D3DSURFACE_DESC		desc;
 	LPDIRECT3DTEXTURE9	pTex = ((LPDIRECT3DTEXTURE9)pTexture->pData);
+	pTex->GetLevelDesc(0, &desc);
 
 	if (FAILED(pTex->LockRect(0, &d3dRect, NULL, 0)))
 		return ZFX_BUFFERLOCK;
@@ -576,7 +577,7 @@ HRESULT ZFXD3DSkinManager::SetTransparency(LPDIRECT3DTEXTURE9* ppTexture, UCHAR 
 
 			// calculate new ARGB value
 			A = (UCHAR)((Color & 0xff000000) >> 24);
-			B = (UCHAR)((Color & 0x00ff0000) >> 16);
+			R = (UCHAR)((Color & 0x00ff0000) >> 16);
 			G = (UCHAR)((Color & 0x0000ff00) >> 8);
 			B = (UCHAR)((Color & 0x000000ff) >> 0);
 

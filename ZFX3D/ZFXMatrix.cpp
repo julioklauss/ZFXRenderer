@@ -1,5 +1,7 @@
 #include "ZFX3D.h"
 
+extern bool g_bSSE;
+
 // build identity matrix
 inline void ZFXMatrix::Identity(void)
 {

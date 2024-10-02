@@ -55,6 +55,7 @@ class ZFXRenderDevice
 		virtual HRESULT Init(HWND, const HWND*, int, int, int, bool) = 0;
 		virtual void	Release(void) = 0;
 		virtual bool	IsRunning(void) = 0;
+		virtual void	GetResolution(POINT*) = 0;
 
 		// RENDERER STUFF:
 		// ----------------
