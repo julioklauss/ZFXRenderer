@@ -1,7 +1,7 @@
 #include "ZFX3D.h"
 
 //// GLOBALS
-extern bool g_bSSE = false;
+bool g_bSSE = false;
 //// END GLOBALS
 
 CPUINFO GetCPUInfo() 
@@ -56,12 +56,12 @@ CPUINFO GetCPUInfo()
 		jbe	_EXIT2				// jump if negative
 		mov [info.bEXT], 1		// true
 
-		mov eax, 80000000h		// Feat-Bits to EDX
+		mov eax, 80000001h		// Feat-Bits to EDX
 		CPUID
 		test edx, 80000000h		// test 3DNow!
 		jz	_EXIT2				// jump if negative
 		mov [info.b3DNOW], 1	// true
-_EXIT2:	// fertig
+	_EXIT2:	// fertig
 	}
 
 	// 3: vendor dependent things
@@ -106,7 +106,7 @@ _EXIT2:	// fertig
 			;	/* NO Extended-Feature-List */
 	}
 
-	info.vendor[13] = '\0';
+	info.vendor[12] = '\0';
 	GetCPUName(info.name, n, info.vendor);
 	return info;
 }
@@ -119,69 +119,69 @@ void GetCPUName(char* chName, int n, const char* vendor)
 	// Intel processors
 	if (strncmp(vendor, "GenuineIntel", 12) == 0) {
 		switch (n) {
-		case 0:		sprintf_s(chName, 200, "< Pentium III/Celeron");
+		case 0:		sprintf_s(chName, 48, "< Pentium III/Celeron");
 					break;
-		case 1:		sprintf_s(chName, 200, "Pentium Celeron (1)");
+		case 1:		sprintf_s(chName, 48, "Pentium Celeron (1)");
 					break;
-		case 2:		sprintf_s(chName, 200, "Pentium III (2)");
+		case 2:		sprintf_s(chName, 48, "Pentium III (2)");
 					break;
-		case 3:		sprintf_s(chName, 200, "Pentium III Xeon/Celeron");
+		case 3:		sprintf_s(chName, 48, "Pentium III Xeon/Celeron");
 					break;
-		case 4:		sprintf_s(chName, 200, "Pentium III (4)");
+		case 4:		sprintf_s(chName, 48, "Pentium III (4)");
 					break;
-		case 6:		sprintf_s(chName, 200, "Pentium III-M");
+		case 6:		sprintf_s(chName, 48, "Pentium III-M");
 					break;
-		case 7:		sprintf_s(chName, 200, "Pentium Celeron (7)");
+		case 7:		sprintf_s(chName, 48, "Pentium Celeron (7)");
 					break;
-		case 8:		sprintf_s(chName, 200, "Pentium IV (Genuine)");
+		case 8:		sprintf_s(chName, 48, "Pentium IV (Genuine)");
 					break;
-		case 9:		sprintf_s(chName, 200, "Pentium IV");
+		case 9:		sprintf_s(chName, 48, "Pentium IV");
 					break;
-		case 10:	sprintf_s(chName, 200, "Pentium Celeron (10)");
+		case 10:	sprintf_s(chName, 48, "Pentium Celeron (10)");
 					break;
-		case 11:	sprintf_s(chName, 200, "Pentium Xeon / Xeon-MP");
+		case 11:	sprintf_s(chName, 48, "Pentium Xeon / Xeon-MP");
 					break;
-		case 12:	sprintf_s(chName, 200, "Pentium Xeon-MP");
+		case 12:	sprintf_s(chName, 48, "Pentium Xeon-MP");
 					break;
-		case 14:	sprintf_s(chName, 200, "Pentium IV-M / Xeon");
+		case 14:	sprintf_s(chName, 48, "Pentium IV-M / Xeon");
 					break;
-		case 15:	sprintf_s(chName, 200, "Pentium Celeron (15)");
+		case 15:	sprintf_s(chName, 48, "Pentium Celeron (15)");
 					break;
-		default:	sprintf_s(chName, 200, "Unknown Intel");
+		default:	sprintf_s(chName, 48, "Unknown Intel");
 					break;
 		} 
 	}
 	else if (strncmp(vendor, "AuthenticAMD", 12) == 0) {
 		switch (n) {
-		case 1660:	sprintf_s(chName, 200, "AthLon / Duron (Model-7)");
+		case 1660:	sprintf_s(chName, 48, "AthLon / Duron (Model-7)");
 					break;
-		case 1644:	sprintf_s(chName, 200, "AthLon / Duron (Model-6)");
+		case 1644:	sprintf_s(chName, 48, "AthLon / Duron (Model-6)");
 					break;
-		case 1596:	sprintf_s(chName, 200, "AthLon / Duron (Model-3)");
+		case 1596:	sprintf_s(chName, 48, "AthLon / Duron (Model-3)");
 					break;
-		case 1612:	sprintf_s(chName, 200, "Athlon (Model-4)");
+		case 1612:	sprintf_s(chName, 48, "Athlon (Model-4)");
 					break;
-		case 1580:	sprintf_s(chName, 200, "AthLon (Model-2)");
+		case 1580:	sprintf_s(chName, 48, "AthLon (Model-2)");
 					break;
-		case 1564:	sprintf_s(chName, 200, "AthLon (Model-1)");
+		case 1564:	sprintf_s(chName, 48, "AthLon (Model-1)");
 					break;
-		case 1463:	sprintf_s(chName, 200, "K6-III (Model-9)");
+		case 1463:	sprintf_s(chName, 48, "K6-III (Model-9)");
 					break;
-		case 1420:	sprintf_s(chName, 200, "K6-2 (Model-8)");
+		case 1420:	sprintf_s(chName, 48, "K6-2 (Model-8)");
 					break;
-		case 1404:	sprintf_s(chName, 200, "K6 (Model-7)");
+		case 1404:	sprintf_s(chName, 48, "K6 (Model-7)");
 					break;
-		case 1388:	sprintf_s(chName, 200, "K6 (Model-6)");
+		case 1388:	sprintf_s(chName, 48, "K6 (Model-6)");
 					break;
-		case 1340:	sprintf_s(chName, 200, "K5 (Model-3)");
+		case 1340:	sprintf_s(chName, 48, "K5 (Model-3)");
 					break;
-		case 1324:	sprintf_s(chName, 200, "K5 (Model-2)");
+		case 1324:	sprintf_s(chName, 48, "K5 (Model-2)");
 					break;
-		case 1308:	sprintf_s(chName, 200, "K5 (Model-1)");
+		case 1308:	sprintf_s(chName, 48, "K5 (Model-1)");
 					break;
-		case 1292:	sprintf_s(chName, 200, "K5 (Model-0)");
+		case 1292:	sprintf_s(chName, 48, "K5 (Model-0)");
 					break;
-		default:	sprintf_s(chName, 200, "Unknown AMD");
+		default:	sprintf_s(chName, 48, "Unknown AMD");
 					break;
 		}
 	}

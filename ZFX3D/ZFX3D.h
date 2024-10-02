@@ -29,6 +29,7 @@ const float		ZFXEPSILON	= 0.00001f;
 #include <windows.h>
 #include <winnt.h>
 #include <excpt.h>
+#include <string.h>
 //// END INCLUDES
 
 typedef struct CPUINFO_TYP {
