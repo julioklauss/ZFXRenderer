@@ -119,7 +119,7 @@ class ZFXRenderDevice
 		virtual ZFXRENDERSTATE	GetShadeMode(void) = 0;
 
 		virtual HRESULT CreateFont(const char*, int, bool, bool, bool, DWORD, UINT*) = 0;
-		virtual HRESULT DrawText(UINT, int, int, UCHAR, UCHAR, UCHAR, char*, ...) = 0;
+		virtual HRESULT DrawText(UINT, int, int, UCHAR, UCHAR, UCHAR, const char*, ...) = 0;
 		virtual void	SetAmbientLight(float fRed, float fGreen, float fBlue) = 0;
 
 		virtual void	UsesAdditiveBlending(bool) = 0;

@@ -87,23 +87,60 @@ typedef enum ZFXENGINEMODE_TYPE
 	EMD_ORTHOGONAL		// orthogonal projection
 } ZFXENGINEMODE;
 
-typedef enum ZFXVERTEXID_TYPE
+typedef enum ZFXVERTEXID
 {
+	VID_PS,				// unstransformed position only
 	VID_UU,				// untransformed and unlit
 	VID_UL,				// untransformed and lit
-} ZFXVERTEXID;
+	VID_CA,				// used for character animation
+	VID_3T,				// three texture coord pairs
+	VID_TV,				// like UU but with tangent vector
+} ;
 
-typedef struct VERTEX_TYPE {
+typedef struct PVERTEX_TYPE
+{
+	float	x, y, z;
+} PVERTEX;
+
+typedef struct VERTEX_TYPE 
+{
 	float	x, y, z;
 	float	vcN[3];
 	float	tu, tv;
 } VERTEX;
 
-typedef struct LVERTEX_TYPE {
+typedef struct LVERTEX_TYPE 
+{
 	float	x, y, z;
 	DWORD	Color;
 	float	tu, tv;
 } LVERTEX;
+
+typedef struct CVERTEX_TYPE
+{
+	float	x, y, z;
+	float	vcN[3];
+	float	tu, tv;
+	float	fBone1, fWeight1;
+	float	tBone2, fWeight2;
+} CVERTEX;
+
+typedef struct VERTEX3T_TYPE
+{
+	float	x, y, z;
+	float	vcN[3];
+	float	tu0, tv0;
+	float	tu1, tv1;
+	float	tu2, tv2;
+} VERTEX3T;
+
+typedef struct TVERTEX_TYPE 
+{
+	float	x, y, z;
+	float	vcN[3];
+	float	tu, tv;
+	float	vcU[3];
+} TVERTEX;
 
 typedef enum ZFXRENDERSTATE_TYPE
 {

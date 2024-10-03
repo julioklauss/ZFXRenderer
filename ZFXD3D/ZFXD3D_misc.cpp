@@ -514,6 +514,12 @@ void ZFXD3D::PrepareShaderStuff()
 	}
 
 	// vertex declaration for vertex shaders
+	D3DVERTEXELEMENT9 declPVertex[] =
+	{
+		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		D3DDECL_END()
+	};
+
 	D3DVERTEXELEMENT9 declVertex[] =
 	{
 		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
@@ -530,9 +536,41 @@ void ZFXD3D::PrepareShaderStuff()
 		D3DDECL_END()
 	};
 
+	D3DVERTEXELEMENT9 declCVertex[] =
+	{
+		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
+		{ 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		{ 0, 32, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1 },
+		D3DDECL_END()
+	};
+
+	D3DVERTEXELEMENT9 decl3TVertex[] =
+	{
+		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
+		{ 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		{ 0, 32, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1 },
+		{ 0, 40, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 2 },
+		D3DDECL_END()
+	};
+
+	D3DVERTEXELEMENT9 declTVertex[] =
+	{
+		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
+		{ 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		{ 0 , 32, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },
+		D3DDECL_END()
+	};
+
 	// Create the vertex declarations
+	m_pDevice->CreateVertexDeclaration(declPVertex, &m_pDeclPVertex);
 	m_pDevice->CreateVertexDeclaration(declVertex, &m_pDeclVertex);
 	m_pDevice->CreateVertexDeclaration(declLVertex, &m_pDeclLVertex);
+	m_pDevice->CreateVertexDeclaration(declCVertex, &m_pDeclCVertex);
+	m_pDevice->CreateVertexDeclaration(decl3TVertex, &m_pDecl3TVertex);
+	m_pDevice->CreateVertexDeclaration(declTVertex, &m_pDeclTVertex);
 	m_pDevice->SetFVF(NULL);
 
 	m_bUseShaders = true;
@@ -626,12 +664,28 @@ HRESULT ZFXD3D::ActivateVShader(UINT nID, ZFXVERTEXID VertexID)
 
 	// get vertex size and format
 	switch (VertexID) {
+		case VID_PS: {
+			if (FAILED(m_pDevice->SetVertexDeclaration(m_pDeclPVertex)))
+				return ZFX_FAIL;
+		}	break;
 		case VID_UU: {
 			if (FAILED(m_pDevice->SetVertexDeclaration(m_pDeclVertex)))
 				return ZFX_FAIL;
 		}	break;
 		case VID_UL: {
 			if (FAILED(m_pDevice->SetVertexDeclaration(m_pDeclLVertex)))
+				return ZFX_FAIL;
+		}	break;
+		case VID_CA: {
+			if (FAILED(m_pDevice->SetVertexDeclaration(m_pDeclCVertex)))
+				return ZFX_FAIL;
+		}	break;
+		case VID_3T: {
+			if (FAILED(m_pDevice->SetVertexDeclaration(m_pDecl3TVertex)))
+				return ZFX_FAIL;
+		}	break;
+		case VID_TV: {
+			if (FAILED(m_pDevice->SetVertexDeclaration(m_pDeclTVertex)))
 				return ZFX_FAIL;
 		}	break;
 		default: return ZFX_INVALIDID;
@@ -880,7 +934,7 @@ HRESULT ZFXD3D::CreateFont(const char* chType, int nWeight, bool bItalic, bool b
 }	//	CreateFont
 /*---------------------------------------------------------*/
 
-HRESULT ZFXD3D::DrawText(UINT nID, int x, int y, UCHAR r, UCHAR g, UCHAR b, char* ch, ...)
+HRESULT ZFXD3D::DrawText(UINT nID, int x, int y, UCHAR r, UCHAR g, UCHAR b, const char* ch, ...)
 {
 	RECT	rc = { x, y, 0, 0 };
 	char	cch[1024];

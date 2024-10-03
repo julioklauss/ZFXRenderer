@@ -181,7 +181,7 @@ class ZFXD3D : public ZFXRenderDevice
 
 		// fonts and text
 		HRESULT	CreateFont(const char*, int, bool, bool, bool, DWORD, UINT*);
-		HRESULT DrawText(UINT, int, int, UCHAR, UCHAR, UCHAR, char*, ...);
+		HRESULT DrawText(UINT, int, int, UCHAR, UCHAR, UCHAR, const char*, ...);
 
 	private:
 		ZFXD3DEnum*				m_pEnum;
@@ -216,6 +216,10 @@ class ZFXD3D : public ZFXRenderDevice
 		// shader stuff
 		LPDIRECT3DVERTEXDECLARATION9	m_pDeclVertex;
 		LPDIRECT3DVERTEXDECLARATION9	m_pDeclLVertex;
+		LPDIRECT3DVERTEXDECLARATION9	m_pDeclPVertex;
+		LPDIRECT3DVERTEXDECLARATION9	m_pDeclCVertex;
+		LPDIRECT3DVERTEXDECLARATION9	m_pDecl3TVertex;
+		LPDIRECT3DVERTEXDECLARATION9	m_pDeclTVertex;
 
 		LPDIRECT3DVERTEXSHADER9		m_pVShader[MAX_SHADER];
 		LPDIRECT3DPIXELSHADER9		m_pPShader[MAX_SHADER];
