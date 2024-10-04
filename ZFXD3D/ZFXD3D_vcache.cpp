@@ -250,9 +250,14 @@ ZFXD3DVCManager::ZFXD3DVCManager(ZFXD3DSkinManager* pSkinMan, LPDIRECT3DDEVICE9 
 	m_dwActiveSB	= MAX_ID;
 	m_DwActiveIB	= MAX_ID;
 
-	for (i = 0; i < NUM_CACHES; ++i) {
+	for (i = 0; i < NUM_CACHES; ++i) 
+	{
+		m_CachePS[i] = new ZFXD3DVCache(nMaxVerts, nMaxIndis, sizeof(PVERTEX), pSkinMan, pDevice, this, ++dwID, FVF_PVERTEX, pLog);
 		m_CacheUU[i] = new ZFXD3DVCache(nMaxVerts, nMaxIndis, sizeof(VERTEX), pSkinMan, pDevice, this, ++dwID, FVF_VERTEX, pLog);
 		m_CacheUL[i] = new ZFXD3DVCache(nMaxVerts, nMaxIndis, sizeof(LVERTEX), pSkinMan, pDevice, this, ++dwID, FVF_LVERTEX, pLog);
+		m_CacheCA[i] = new ZFXD3DVCache(nMaxVerts, nMaxIndis, sizeof(CVERTEX), pSkinMan, pDevice, this, ++dwID, FVF_CVERTEX, pLog);
+		m_Cache3T[i] = new ZFXD3DVCache(nMaxVerts, nMaxIndis, sizeof(VERTEX3T), pSkinMan, pDevice, this, ++dwID, FVF_T3VERTEX, pLog);
+		m_CacheTV[i] = new ZFXD3DVCache(nMaxVerts, nMaxIndis, sizeof(TVERTEX), pSkinMan, pDevice, this, ++dwID, FVF_TVERTEX, pLog);
 	}	// for	
 }	//	constructor
 /*---------------------------------------------------------*/
@@ -294,6 +299,10 @@ ZFXD3DVCManager::~ZFXD3DVCManager(void)
 	// release the vertex cache objects
 	for (i = 0; i < NUM_CACHES; ++i)
 	{
+		if (m_CachePS[i]) {
+			delete m_CachePS[i];
+			m_CachePS[i] = NULL;
+		}
 		if (m_CacheUU[i]) {
 			delete m_CacheUU[i];
 			m_CacheUU[i] = NULL;
@@ -301,6 +310,18 @@ ZFXD3DVCManager::~ZFXD3DVCManager(void)
 		if (m_CacheUL[i]) {
 			delete m_CacheUL[i];
 			m_CacheUL[i] = NULL;
+		}
+		if (m_CacheCA[i]) {
+			delete m_CacheCA[i];
+			m_CacheCA[i] = NULL;
+		}
+		if (m_Cache3T[i]) {
+			delete m_Cache3T[i];
+			m_Cache3T[i] = NULL;
+		}
+		if (m_CacheTV[i]) {
+			delete m_CacheTV[i];
+			m_CacheTV[i] = NULL;
 		}
 	}	// for
 }	//	destructor
@@ -319,9 +340,17 @@ HRESULT ZFXD3DVCManager::Render(ZFXVERTEXID VertexID, UINT nVerts, UINT nIndis, 
 	// which vertex type is used?
 	switch (VertexID)
 	{
+		case VID_PS:	{ pCache = m_CachePS; }
+						break;
 		case VID_UU:	{ pCache = m_CacheUU; }
 						break;
 		case VID_UL:	{ pCache = m_CacheUL; }
+						break;
+		case VID_CA:	{ pCache = m_CacheCA; }
+						break;
+		case VID_3T:	{ pCache = m_Cache3T; }
+						break;
+		case VID_TV:	{ pCache = m_CacheTV; }
 						break;
 		default:	return ZFX_INVALIDID;
 	}	// switch
@@ -373,9 +402,17 @@ HRESULT ZFXD3DVCManager::ForcedFlush(ZFXVERTEXID VertexID)
 
 	switch (VertexID)
 	{
+		case VID_PS:	{ pCache = m_CachePS; }
+			   break;
 		case VID_UU:	{ pCache = m_CacheUU; }
 						break;
 		case VID_UL:	{ pCache = m_CacheUL; }
+						break;
+		case VID_CA:	{ pCache = m_CacheCA; }
+						break;
+		case VID_3T:	{ pCache = m_Cache3T; }
+						break;
+		case VID_TV:	{ pCache = m_CacheTV; }
 						break;
 
 		// unknown Vertex-Type
@@ -397,6 +434,11 @@ HRESULT ZFXD3DVCManager::ForcedFlushAll(void)
 	int		i;
 
 	for (i = 0; i < NUM_CACHES; ++i)
+		if (!m_CachePS[i]->IsEmpty())
+			if (FAILED(m_CachePS[i]->Flush(bShaders)))
+				hr = ZFX_FAIL;
+
+	for (i = 0; i < NUM_CACHES; ++i)
 		if (!m_CacheUU[i]->IsEmpty())
 			if (FAILED(m_CacheUU[i]->Flush(bShaders)))
 				hr = ZFX_FAIL;
@@ -404,6 +446,21 @@ HRESULT ZFXD3DVCManager::ForcedFlushAll(void)
 	for (i = 0; i < NUM_CACHES; ++i)
 		if (!m_CacheUL[i]->IsEmpty())
 			if (FAILED(m_CacheUL[i]->Flush(bShaders)))
+				hr = ZFX_FAIL;
+	
+	for (i = 0; i < NUM_CACHES; ++i)
+		if (!m_CacheCA[i]->IsEmpty())
+			if (FAILED(m_CacheCA[i]->Flush(bShaders)))
+				hr = ZFX_FAIL;
+
+	for (i = 0; i < NUM_CACHES; ++i)
+		if (!m_Cache3T[i]->IsEmpty())
+			if (FAILED(m_Cache3T[i]->Flush(bShaders)))
+				hr = ZFX_FAIL;
+
+	for (i = 0; i < NUM_CACHES; ++i)
+		if (!m_CacheTV[i]->IsEmpty())
+			if (FAILED(m_CacheTV[i]->Flush(bShaders)))
 				hr = ZFX_FAIL;
 
 	return hr;
@@ -420,7 +477,7 @@ HRESULT ZFXD3DVCManager::CreateStaticBuffer(ZFXVERTEXID VertexID, UINT nSkinID, 
 
 	// allocate memory if needed
 	if ((m_nNumSB % 50) == 0) {
-		int n = (m_nNumSB + 50) % sizeof(ZFXSTATICBUFFER);
+		int n = (m_nNumSB + 50) * sizeof(ZFXSTATICBUFFER);
 		m_pSB = (ZFXSTATICBUFFER*)realloc(m_pSB, n);
 		if (!m_pSB)
 			return ZFX_OUTOFMEMORY;
@@ -433,6 +490,10 @@ HRESULT ZFXD3DVCManager::CreateStaticBuffer(ZFXVERTEXID VertexID, UINT nSkinID, 
 	// size and format of the vertices
 	switch (VertexID)
 	{
+		case VID_PS: {
+			m_pSB[m_nNumSB].nStride = sizeof(PVERTEX);
+			m_pSB[m_nNumSB].dwFVF = FVF_PVERTEX;
+		}	break;
 		case VID_UU: {
 			m_pSB[m_nNumSB].nStride = sizeof(VERTEX);
 			m_pSB[m_nNumSB].dwFVF = FVF_VERTEX;
@@ -440,6 +501,18 @@ HRESULT ZFXD3DVCManager::CreateStaticBuffer(ZFXVERTEXID VertexID, UINT nSkinID, 
 		case VID_UL: {
 			m_pSB[m_nNumSB].nStride = sizeof(LVERTEX);
 			m_pSB[m_nNumSB].dwFVF = FVF_LVERTEX;
+		}	break;
+		case VID_CA: {
+			m_pSB[m_nNumSB].nStride = sizeof(CVERTEX);
+			m_pSB[m_nNumSB].dwFVF = FVF_CVERTEX;
+		}	break;
+		case VID_3T: {
+			m_pSB[m_nNumSB].nStride = sizeof(VERTEX3T);
+			m_pSB[m_nNumSB].dwFVF = FVF_T3VERTEX;
+		}	break;
+		case VID_TV: {
+			m_pSB[m_nNumSB].nStride = sizeof(TVERTEX);
+			m_pSB[m_nNumSB].dwFVF = FVF_TVERTEX;
 		}	break;
 		default:	return ZFX_INVALIDID;
 	}	// switch
@@ -570,7 +643,7 @@ HRESULT ZFXD3DVCManager::Render(UINT nID)
 
 	// if no shader is used activate the approprite FVF
 	if (!m_pZFXD3D->UsesShaders())
-		m_pDevice->SetFVF(FVF_VERTEX);
+		m_pDevice->SetFVF(m_pSB[nID].dwFVF);
 
 	// indexed primitives
 	if (m_pSB[nID].bIndis) {
@@ -627,13 +700,29 @@ HRESULT ZFXD3DVCManager::RenderPoints(ZFXVERTEXID VID, UINT nVerts, const void* 
 
 	switch (VID)
 	{
-		case VID_UU:	{
+		case VID_PS: {
+			nStride = sizeof(PVERTEX);
+			dwFVF = FVF_PVERTEX;
+		}	break;
+		case VID_UU: {
 			nStride = sizeof(VERTEX);
 			dwFVF = FVF_VERTEX;
 		}	break;
 		case VID_UL: {
 			nStride = sizeof(LVERTEX);
 			dwFVF = FVF_LVERTEX;
+		}	break;
+		case VID_CA: {
+			nStride = sizeof(CVERTEX);
+			dwFVF = FVF_CVERTEX;
+		}	break;
+		case VID_3T: {
+			nStride = sizeof(VERTEX3T);
+			dwFVF = FVF_T3VERTEX;
+		}	break;
+		case VID_TV: {
+			nStride = sizeof(TVERTEX);
+			dwFVF = FVF_TVERTEX;
 		}	break;
 		default:	return ZFX_INVALIDID;
 	}	// switch
@@ -673,6 +762,10 @@ HRESULT ZFXD3DVCManager::RenderLines(ZFXVERTEXID VID, UINT nVerts, const void* p
 
 	switch (VID)
 	{
+		case VID_PS: {
+			nStride = sizeof(PVERTEX);
+			dwFVF = FVF_PVERTEX;
+		}	break;
 		case VID_UU:	{
 			nStride = sizeof(VERTEX);
 			dwFVF	= FVF_VERTEX;
@@ -680,6 +773,18 @@ HRESULT ZFXD3DVCManager::RenderLines(ZFXVERTEXID VID, UINT nVerts, const void* p
 		case VID_UL: {
 			nStride = sizeof(LVERTEX);
 			dwFVF = FVF_LVERTEX;
+		}	break;
+		case VID_CA: {
+			nStride = sizeof(CVERTEX);
+			dwFVF = FVF_CVERTEX;
+		}	break;
+		case VID_3T: {
+			nStride = sizeof(VERTEX3T);
+			dwFVF = FVF_T3VERTEX;
+		}	break;
+		case VID_TV: {
+			nStride = sizeof(TVERTEX);
+			dwFVF = FVF_TVERTEX;
 		}	break;
 		default:	return ZFX_INVALIDID;
 	}	// switch

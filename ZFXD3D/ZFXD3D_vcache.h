@@ -100,8 +100,12 @@ class ZFXD3DVCManager : public ZFXVertexCacheManager
 		ZFXINDEXBUFFER*		m_pIB;
 		UINT				m_nNumSB;
 		UINT				m_nNumIB;
-		ZFXD3DVCache*		m_CacheUU[NUM_CACHES];
-		ZFXD3DVCache*		m_CacheUL[NUM_CACHES];
+		ZFXD3DVCache*		m_CachePS[NUM_CACHES];	// position only
+		ZFXD3DVCache*		m_CacheUU[NUM_CACHES];	// untransformed unlit
+		ZFXD3DVCache*		m_CacheUL[NUM_CACHES];	// untransformed lit
+		ZFXD3DVCache*		m_CacheCA[NUM_CACHES];	// character animation
+		ZFXD3DVCache*		m_Cache3T[NUM_CACHES];	// three textures
+		ZFXD3DVCache*		m_CacheTV[NUM_CACHES];	// uu with tangent
 		DWORD				m_dwActiveCache;
 		DWORD				m_dwActiveSB;
 		DWORD				m_DwActiveIB;
