@@ -61,10 +61,10 @@ ZFXD3D::ZFXD3D(HINSTANCE hDLL)
 	m_pDevice			= NULL;
 	m_pLog				= NULL;
 	m_ClearColor		= D3DCOLOR_COLORVALUE( 0.0f, 0.0f, 0.0f, 1.0f );
-	
 	m_bRunning			= false;
 	m_bIsScreenRunning	= false;
-	
+	m_bCanDoShaders		= false;
+	m_bUseShaders		= false;
 	m_nActiveWnd		= 0;
 	
 	g_ZFXD3D			= this;
@@ -109,13 +109,13 @@ BOOL CALLBACK ZFXD3D::DlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 	BOOL		bWnd = FALSE;
 
 	// get handlers
-	HWND hFULL = GetDlgItem(hDlg, IDC_FULL);
-	HWND hWND = GetDlgItem(hDlg, IDC_WND);
-	HWND hADAPTER = GetDlgItem(hDlg, IDC_ADAPTER);
-	HWND hMODE = GetDlgItem(hDlg, IDC_MODE);
-	HWND hADAPTERFMT = GetDlgItem(hDlg, IDC_ADAPTERFMT);
-	HWND hBACKFMT = GetDlgItem(hDlg, IDC_BACKFMT);
-	HWND hDEVICE = GetDlgItem(hDlg, IDC_DEVICE);
+	HWND hFULL			= GetDlgItem(hDlg, IDC_FULL);
+	HWND hWND			= GetDlgItem(hDlg, IDC_WND);
+	HWND hADAPTER		= GetDlgItem(hDlg, IDC_ADAPTER);
+	HWND hMODE			= GetDlgItem(hDlg, IDC_MODE);
+	HWND hADAPTERFMT	= GetDlgItem(hDlg, IDC_ADAPTERFMT);
+	HWND hBACKFMT		= GetDlgItem(hDlg, IDC_BACKFMT);
+	HWND hDEVICE		= GetDlgItem(hDlg, IDC_DEVICE);
 
 	switch (message)
 	{
@@ -289,7 +289,7 @@ HRESULT ZFXD3D::Go(void)
 	}
 
 	// fill in present parameters structure
-	ZeroMemory(&m_d3dpp, sizeof(m_d3dpp));
+	SecureZeroMemory(&m_d3dpp, sizeof(m_d3dpp));
 	m_d3dpp.Windowed				= m_bWindowed;
 	m_d3dpp.BackBufferCount			= 1;
 	m_d3dpp.BackBufferFormat		= g_Dspmd.Format;
@@ -387,7 +387,7 @@ HRESULT ZFXD3D::InitWindowed(HWND hWnd, const HWND* hWnd3D, int nNumhWnd, bool b
 	}
 
 	// prepare present parameters structure
-	ZeroMemory(&m_d3dpp, sizeof(m_d3dpp));
+	SecureZeroMemory(&m_d3dpp, sizeof(m_d3dpp));
 	m_d3dpp.Windowed				= m_bWindowed;
 	m_d3dpp.BackBufferCount			= 1;
 	m_d3dpp.BackBufferFormat		= D3DFMT_X8R8G8B8;

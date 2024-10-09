@@ -655,7 +655,7 @@ HRESULT ZFXD3D::CreateVShader(const void* pData, UINT nSize, bool bLoadFromFile,
 HRESULT ZFXD3D::ActivateVShader(UINT nID, ZFXVERTEXID VertexID)
 {
 	if (!m_bUseShaders)
-		return ZFX_NOSHADERSUPPOT;
+		return ZFX_NOSHADERSUPPORT;
 	if (nID >= m_nNumVShaders)
 		return ZFX_INVALIDID;
 
@@ -792,7 +792,7 @@ HRESULT ZFXD3D::CreatePShader(const void* pData, UINT nSize, bool bLoadFromFile,
 HRESULT ZFXD3D::ActivatePShader(UINT nID)
 {
 	if (!m_bUseShaders) 
-		return ZFX_NOSHADERSUPPOT;
+		return ZFX_NOSHADERSUPPORT;
 	if (nID >= m_nNumPShaders)
 		return ZFX_INVALIDID;
 
@@ -804,6 +804,50 @@ HRESULT ZFXD3D::ActivatePShader(UINT nID)
 
 	return ZFX_OK;
 }	//	ActivatePShader
+/*---------------------------------------------------------*/
+
+HRESULT ZFXD3D::SetShaderConstant(ZFXSHADER sht, ZFXDATA dat, UINT nReg, UINT nNum, const void* pData)
+{
+	if (!m_bCanDoShaders)
+		return ZFX_NOSHADERSUPPORT;
+
+	if (sht == SHT_VERTEX) {
+		if (nReg < 20) 
+			return ZFX_INVALIDPARAM;
+
+		switch (dat)
+		{
+			case DAT_BOOL:
+				m_pDevice->SetVertexShaderConstantB(nReg, (BOOL*)pData, nNum);
+				break;
+			case DAT_INT:
+				m_pDevice->SetVertexShaderConstantI(nReg, (int*)pData, nNum);
+				break;
+			case DAT_FLOAT:
+				m_pDevice->SetVertexShaderConstantF(nReg, (float*)pData, nNum);
+				break;
+			default:
+				return ZFX_FAIL;
+		}	// switch
+	}
+	else {
+		switch (dat)
+		{
+			case DAT_BOOL:
+				m_pDevice->SetPixelShaderConstantB(nReg, (BOOL*)pData, nNum);
+				break;
+			case DAT_INT:
+				m_pDevice->SetPixelShaderConstantI(nReg, (int*)pData, nNum);
+				break;
+			case DAT_FLOAT:
+				m_pDevice->SetPixelShaderConstantF(nReg, (float*)pData, nNum);
+				break;
+			default:
+				return ZFX_FAIL;
+		}	// switch
+	}
+	return ZFX_OK;
+}	//	SetShaderConstant
 /*---------------------------------------------------------*/
 
 void ZFXD3D::SetBackfaceCulling(ZFXRENDERSTATE rs)

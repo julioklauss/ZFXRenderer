@@ -168,6 +168,7 @@ class ZFXD3D : public ZFXRenderDevice
 		HRESULT	CreatePShader(const void*, UINT, bool, bool, UINT*);
 		HRESULT ActivateVShader(UINT, ZFXVERTEXID);
 		HRESULT ActivatePShader(UINT);
+		HRESULT SetShaderConstant(ZFXSHADER, ZFXDATA, UINT, UINT, const void*);
 		bool	UsesShaders(void) { return m_bUseShaders; }
 		void	UsesShaders(bool bUsesShaders) { m_bUseShaders = bUsesShaders; }
 		bool	UsesAdditiveBlending(void) { return m_bAdditive; }

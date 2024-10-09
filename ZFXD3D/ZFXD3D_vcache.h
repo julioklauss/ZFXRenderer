@@ -85,7 +85,7 @@ class ZFXD3DVCManager : public ZFXVertexCacheManager
 
 		DWORD	GetActiveCache(void)		{ return m_dwActiveCache; }
 		void	SetActiveCache(DWORD dwID)	{ m_dwActiveCache = dwID; }
-		ZFXD3D* GetZFXD3D(void) { return m_pZFXD3D; }
+		ZFXD3D* GetZFXD3D(void)				{ return m_pZFXD3D; }
 
 		void	InvalidateStates(void);
 

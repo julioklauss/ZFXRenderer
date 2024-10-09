@@ -105,6 +105,7 @@ class ZFXRenderDevice
 		virtual HRESULT	CreatePShader(const void*, UINT, bool, bool, UINT*) = 0;
 		virtual HRESULT ActivateVShader(UINT, ZFXVERTEXID) = 0;
 		virtual HRESULT ActivatePShader(UINT) = 0;
+		virtual HRESULT SetShaderConstant(ZFXSHADER, ZFXDATA, UINT, UINT, const void*) = 0;
 		virtual bool	UsesShaders(void) = 0;
 		virtual void	UsesShaders(bool) = 0;
 		virtual bool	CanDoShaders(void) = 0;

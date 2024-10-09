@@ -26,7 +26,7 @@ extern bool g_blF;
 #define ZFX_OUTOFMEMORY		0x8200000a
 #define ZFX_FILENOTFOUND	0x8200000b
 #define	ZFX_INVALIDFILE		0x8200000c
-#define ZFX_NOSHADERSUPPOT	0x8200000d
+#define ZFX_NOSHADERSUPPORT	0x8200000d
 #define ZFX_FAILa			0x8200000c
 #define ZFX_FAILb			0x8200000d
 #define ZFX_FAILc			0x8200000e
@@ -144,15 +144,51 @@ typedef struct TVERTEX_TYPE
 
 typedef enum ZFXRENDERSTATE_TYPE
 {
-	RS_CULL_CW,			// culling clockwise
-	RS_CULL_CCW,		// culling counterclockwise
-	RS_CULL_NONE,		// render frontface and backface
-	RS_DEPTH_READWRITE,	// read and write depth buffer
-	RS_DEPTH_READONLY,	// no writes to depth buffer
-	RS_DEPTH_NONE,		// no reads or writes with depth buffer
-	RS_SHADE_POINTS,	// render vertices as points
-	RS_SHADE_TRIWIRE,	// render wireframe triangles
-	RS_SHADE_HULLWIRE,	// render wireframe polygons
-	RS_SHADE_SOLID		// solid triangles
+	RS_NONE,					// nothing
+	RS_CULL_CW,					// culling clockwise
+	RS_CULL_CCW,				// culling counterclockwise
+	RS_CULL_NONE,				// render frontface and backface
+	RS_DEPTH_READWRITE,			// read and write depth buffer
+	RS_DEPTH_READONLY,			// no writes to depth buffer
+	RS_DEPTH_NONE,				// no reads or writes with depth buffer
+	RS_SHADE_POINTS,			// render vertices as points
+	RS_SHADE_LINES,				// render two verts as one lines
+	RS_SHADE_TRIWIRE,			// render wireframe triangles
+	RS_SHADE_HULLWIRE,			// render wireframe polygons
+	RS_SHADE_SOLID,				// solid triangles
+	RS_TEX_ADDSIGNED,			// texture stage operation
+	RS_TEX_MODULATE,			// texture stage operation
+	RS_STENCIL_DISABLE,			// stencilbuffer off
+	RS_STENCIL_ENABLE,			// stencilbuffer on
+	RS_STENCIL_FUNC_ALWAYS,		// stencil pass mode
+	RS_STENCIL_FUNC_LESSEQUAL,	// stencil pass mode
+	RS_STENCIL_MASK,			// stencil mask
+	RS_STENCIL_WRITEMASK,		// stencil write mask
+	RS_STENCIL_REF,				// reference value
+	RS_STENCIL_FAIL_DECR,		// stencil fail decrements
+	RS_STENCIL_FAIL_INCR,		// stencil fail increments
+	RS_STENCIL_FAIL_KEEP,		// stencil fail keeps
+	RS_STENCIL_ZFAIL_DECR,		// stencil pass but z fail decrements
+	RS_STENCIL_ZFAIL_INCR,		// stencil pass but z fail increments
+	RS_STENCIL_ZFAIL_KEEP,		// stencil pass but z fail keeps
+	RS_STENCIL_PASS_DECR,		// stencil pass decrements
+	RS_STENCIL_PASS_INCR,		// stencil pass increments
+	RS_STENCIL_PASS_KEEP,		// stencil pass keeps
+	RS_DEPTHBIAS				// bias value to add to depth values
 } ZFXRENDERSTATE;
+
+// data types 
+typedef enum ZFXDATA_TYPE 
+{
+	DAT_BOOL,			// boolean
+	DAT_INT,			// integer
+	DAT_FLOAT,			// floating point
+} ZFXDATA;
+
+// shader types
+typedef enum ZFXSHADER_TYPE
+{
+	SHT_VERTEX,
+	SHT_PIXEL
+} ZFXSHADER;
 #endif
