@@ -122,7 +122,7 @@ typedef struct CVERTEX_TYPE
 	float	vcN[3];
 	float	tu, tv;
 	float	fBone1, fWeight1;
-	float	tBone2, fWeight2;
+	float	fBone2, fWeight2;
 } CVERTEX;
 
 typedef struct VERTEX3T_TYPE

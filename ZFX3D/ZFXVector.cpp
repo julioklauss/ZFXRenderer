@@ -119,6 +119,26 @@ inline float ZFXVector::AngleWith(ZFXVector& v)
 }
 /*---------------------------------------------------------*/
 
+inline void ZFXVector::RotateWith(const ZFXMatrix& m)
+{
+	// applying rotational part of matrix only
+	float _x = x * m._11 + y * m._21 + z * m._31;
+	float _y = x * m._12 + y * m._22 + z * m._32;
+	float _z = x * m._13 + y * m._23 + z * m._33;
+	x = _x;		y = _y;		z = _z;
+}
+/*---------------------------------------------------------*/
+
+inline void ZFXVector::InvRotateWith(const ZFXMatrix& m)
+{
+	// using tranposed matrix
+	float _x = x * m._11 + y * m._12 + z * m._13;
+	float _y = x * m._21 + y * m._22 + z * m._23;
+	float _z = x * m._31 + y * m._32 + z * m._33;
+	x = _x;		y = _y;		z = _z;
+}
+/*---------------------------------------------------------*/
+
 inline float ZFXVector::GetLength(void)
 {
 	float f;

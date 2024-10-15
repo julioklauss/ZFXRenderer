@@ -89,6 +89,37 @@ int ZFXPlane::Classify(const ZFXPolygon& poly)
 }	//	Classify
 /*---------------------------------------------------------*/
 
+bool ZFXPlane::Clip(const ZFXRay* _pRay, float fL, ZFXRay* pF, ZFXRay* pB)
+{
+	ZFXVector vcHit(0.0f, 0.0f, 0.0f);
+
+	ZFXRay* pRay = (ZFXRay*)_pRay;
+
+	// ray intersects plane at all?
+	if (!pRay->Intersects(*this, false, fL, NULL, &vcHit))
+		return false;
+
+	int n = Classify(_pRay->m_vcOrig);
+
+	// ray comes from planes backside
+	if (n == ZFXBACK) {
+		if (pB)
+			pB->Set(pRay->m_vcOrig, pRay->m_vcDir);
+		if (pF)
+			pF->Set(vcHit, pRay->m_vcDir);
+	}
+	// ray comes from plane front side
+	else if (n == ZFXFRONT) {
+		if (pF)
+			pB->Set(pRay->m_vcOrig, pRay->m_vcDir);
+		if (pB)
+			pB->Set(vcHit, pRay->m_vcDir);
+	}
+
+	return true;
+}	//	Clip
+/*---------------------------------------------------------*/
+
 bool ZFXPlane::Intersects(const ZFXVector& vc0, const ZFXVector& vc1, const ZFXVector& vc2)
 {
 	int n = this->Classify(vc0);

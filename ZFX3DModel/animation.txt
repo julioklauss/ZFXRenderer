@@ -1,0 +1,18 @@
+// animation.txt
+// this file contains all animations for the model
+// ------------------------
+Number: "14"
+S: "001" E: "001" D: "Bind position"
+S: "002" E: "020" D: "Walk Cycle 1"
+S: "022" E: "036" D: "Walk Cycle 2"
+S: "038" E: "047" D: "Zombie being attacked 1"
+S: "048" E: "057" D: "Zombie being attacked 2"
+S: "059" E: "075" D: "Blown away onto his back"
+S: "078" E: "088" D: "Still lying down and twitching
+			(offset)"
+S: "091" E: "103" D: "Die and fall forward"
+S: "106" E: "115" D: "Kick attack"
+S: "117" E: "128" D: "Punch/grab attack"
+S: "129" E: "136" D: "Head butt :-)"
+S: "137" E: "169" D: "Idle 1"
+S: "170" E: "200" D: "Idle 2"

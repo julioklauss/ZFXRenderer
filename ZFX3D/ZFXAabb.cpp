@@ -156,6 +156,90 @@ bool ZFXAabb::Contains(const ZFXRay& Ray, float fL)
 	return (Intersects(Ray.m_vcOrig) && Intersects(vcEnd));
 }	//	Contains
 
+bool ZFXAabb::Intersects(const ZFXRay& ray, float fL, float* t)
+{
+	bool bInside = true;
+	float t0, t1, tmp;
+	float tNear = -999999.9f;
+	float tFar = 999999.9f;
+	float epsilon = 0.00001f;
+	float tFinal;
+	ZFXVector MaxT;
+
+	// first pair of planes
+	if (_fabs(ray.m_vcDir.x) < epsilon)
+		if ((ray.m_vcOrig.x < vcMin.x) || (ray.m_vcOrig.x > vcMax.x))
+			return false;
+	t0 = (vcMin.x - ray.m_vcOrig.x) / ray.m_vcDir.x;
+	t1 = (vcMax.x - ray.m_vcOrig.x) / ray.m_vcDir.x;
+	if (t0 > t1) {
+		tmp = t0;
+		t0	= t1;
+		t1	= tmp;
+	}
+	if (t0 > tNear)
+		tNear = t0;
+	if (t1 < tFar)
+		tFar = t1;
+	if (tNear > tFar || tFar < 0)
+		return false;
+
+	// second pair of planes
+	if (_fabs(ray.m_vcDir.y) < epsilon)
+		if ((ray.m_vcOrig.y < vcMin.y) || (ray.m_vcOrig.y > vcMax.y))
+			return false;
+	t0 = (vcMin.y - ray.m_vcOrig.y) / ray.m_vcDir.y;
+	t1 = (vcMax.y - ray.m_vcOrig.y) / ray.m_vcDir.y;
+	if (t0 > t1) {
+		tmp = t0;
+		t0	= t1;
+		t1	= tmp;
+	}
+	if (t0 > tNear)
+		tNear = t0;
+	if (t1 < tFar)
+		tFar = t1;
+	if (tNear > tFar || tFar < 0)
+		return false;
+
+	// third pair of planes
+	if (_fabs(ray.m_vcDir.z) < epsilon)
+		if ((ray.m_vcOrig.z < vcMin.z) || (ray.m_vcOrig.z > vcMax.z))
+			return false;
+	t0 = (vcMin.z - ray.m_vcOrig.z) / ray.m_vcDir.z;
+	t1 = (vcMax.z - ray.m_vcOrig.z) / ray.m_vcDir.z;
+	if (t0 > t1) {
+		tmp = t0;
+		t0	= t1;
+		t1	= tmp;
+	}
+	if (t0 > tNear)
+		tNear = t0;
+	if (t1 < tFar)
+		tFar = t1;
+	if (tNear > tFar || tFar < 0)
+		return false;
+
+	if (tNear > 0)
+		tFinal = tNear;
+	else
+		tFinal = tFar;
+
+	if (fL >= 0 && tFinal > fL)
+		return false;
+
+	if (t)
+		*t = tFinal;
+
+	return true;
+}	//	Intersects(Ray)
+/*---------------------------------------------------------*/
+
+bool ZFXAabb::Intersects(const ZFXRay& ray, float* t)
+{
+	return this->Intersects(ray, FLT_MAX, t);
+}
+
 // intersection between two aabbs
 bool ZFXAabb::Intersects(const ZFXAabb& aabb)
 {

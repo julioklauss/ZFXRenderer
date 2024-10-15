@@ -59,6 +59,46 @@ inline void ZFXMatrix::RotaZ(float a)
 }
 /*---------------------------------------------------------*/
 
+inline void ZFXMatrix::ApplyInverseRota(ZFXVector* pvc)
+{
+	pvc->x = pvc->x * _11 + pvc->y * _12 + pvc->z * _13;
+	pvc->y = pvc->x * _21 + pvc->y * _22 + pvc->z * _23;
+	pvc->z = pvc->x * _31 + pvc->y * _32 + pvc->z * _33;
+	pvc->w = 1.0f;
+}
+/*---------------------------------------------------------*/
+
+inline void ZFXMatrix::Rota(float x, float y, float z)
+{
+	Rota(ZFXVector(x, y, z));
+}
+/*---------------------------------------------------------*/
+
+inline void ZFXMatrix::Rota(const ZFXVector& vc)
+{
+	float sr, sp, sy, cr, cp, cy;
+
+	Identity();
+
+	sy = sinf(vc.z);
+	cy = cosf(vc.z);
+	sp = sinf(vc.y);
+	cp = cosf(vc.y);
+	sr = sinf(vc.x);
+	cr = cosf(vc.x);
+
+	_11 = cp * cy;
+	_12 = cp * sy;
+	_13 = -sp;
+	_21 = sr * sp * cy + cr * -sy;
+	_22 = sr * sp * sy + cr * cy;
+	_23 = sr * cp;
+	_31 = (cr * cp * cy + -sr * -sy);
+	_32 = (cr * sp * sy + -sr * cy);
+	_33 = cr * cp;
+}
+/*---------------------------------------------------------*/
+
 // build rotation matrix around arbitrary axis
 inline void ZFXMatrix::RotaArbi(ZFXVector vcAxis, float a)
 {
@@ -91,6 +131,21 @@ inline void ZFXMatrix::Translate(float dx, float dy, float dz)
 	_41 = dx;
 	_42 = dy;
 	_43 = dz;
+}
+/*---------------------------------------------------------*/
+
+inline void ZFXMatrix::SetTranslation(ZFXVector vc, bool b)
+{
+	if (b) Identity();
+	_41 = vc.x;
+	_42 = vc.y;
+	_43 = vc.z;
+}
+/*---------------------------------------------------------*/
+
+inline ZFXVector ZFXMatrix::GetTranslation(void)
+{
+	return ZFXVector(_41, _42, _43);
 }
 /*---------------------------------------------------------*/
 

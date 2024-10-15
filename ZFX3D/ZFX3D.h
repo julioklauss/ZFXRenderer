@@ -46,6 +46,7 @@ typedef struct CPUINFO_TYP {
 
 //// FUNCTION DECLARATION
 float _fabs(float f);
+CPUINFO GetCPUInfo();
 void GetCPUName(char* chName, int n, const char* vendor);
 bool OSSupportSSE();
 bool ZFX3DInitCPU();
@@ -77,12 +78,17 @@ class __declspec(dllexport) ZFXVector
 		inline float	GetSqrLength(void) const;
 		inline void		Negate(void);
 		inline void		Normalize(void);
+		inline void		RotateWith(const ZFXMatrix& m);
+		inline void		InvRotateWith(const ZFXMatrix& m);
 		inline float	AngleWith(ZFXVector& v);
 		inline void		Difference(const ZFXVector& u, const ZFXVector& v);
+		inline void		Cross(const ZFXVector& u, const ZFXVector& v);
+		
 		void operator	+= (const ZFXVector& v);
 		void operator	-= (const ZFXVector& v);
 		void operator	*= (float f);
 		void operator	/= (float f);
+		
 		float		operator * (const ZFXVector& v) const;
 		ZFXVector	operator * (float f) const;
 		ZFXVector	operator / (float f) const;
@@ -91,7 +97,6 @@ class __declspec(dllexport) ZFXVector
 		ZFXVector	operator * (const ZFXMatrix& m) const;
 		ZFXVector	operator + (const ZFXVector& v) const;
 		ZFXVector	operator - (const ZFXVector& v) const;
-		inline void Cross(const ZFXVector& u, const ZFXVector& v);
 };	//	class
 
 class __declspec(dllexport) ZFXMatrix
@@ -108,8 +113,13 @@ class __declspec(dllexport) ZFXMatrix
 		inline void RotaX(float a);		// X-Axis
 		inline void RotaY(float a);		// Y-Axis
 		inline void RotaZ(float a);		// Z-Axis
+		inline void Rota(const ZFXVector& vc);
+		inline void Rota(float x, float y, float z);
 		inline void RotaArbi(ZFXVector vcAxis, float a);
+		inline void ApplyInverseRota(ZFXVector* pvc);
 		inline void Translate(float dx, float dy, float dz);
+		inline void SetTranslation(ZFXVector vc, bool EraseContent = false);
+		inline ZFXVector GetTranslation(void);
 
 		inline void TransposeOf(const ZFXMatrix& m);
 		inline void InverseOf(const ZFXMatrix& m);
@@ -163,7 +173,10 @@ class __declspec(dllexport) ZFXPlane
 
 		// classifying a point with respect to plane
 		inline int Classify(const ZFXVector& vcPoint);
-		int Classify(const ZFXPolygon& poly);
+		inline int Classify(const ZFXPolygon& poly);
+
+		// clips a ray into two segments if it intersects the plane
+		bool Clip(const ZFXRay*, float, ZFXRay*, ZFXRay*);
 
 		// intersection with a triangle
 		bool Intersects(const ZFXVector& vc0, const ZFXVector& vc1, const ZFXVector& vc2);
@@ -191,6 +204,9 @@ class __declspec(dllexport) ZFXAabb
 
 		void GetPlanes(ZFXPlane* pPlanes);
 		bool Contains(const ZFXRay& ray, float fL);
+
+		bool Intersects(const ZFXRay& ray, float* t);
+		bool Intersects(const ZFXRay& ray, float fL, float* t);
 
 		bool Intersects(const ZFXAabb& aabb);
 		bool Intersects(const ZFXVector& vc);
