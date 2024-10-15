@@ -111,15 +111,15 @@ HRESULT CZFXModel::Prepare(void)
 
 		// prepare textures
 		ZeroMemory(cTexture, sizeof(char) * 256);
-		pcSeperator = strchr(strrev(strdup(m_pcFileName)), '/');
+		pcSeperator = strchr(_strrev(_strdup(m_pcFileName)), '/');
 
 		if (!pcSeperator)
-			pcSeperator = strchr(strrev(strdup(m_pcFileName)), 92);
+			pcSeperator = strchr(_strrev(_strdup(m_pcFileName)), 92);
 
 		if (pcSeperator)
-			strcpy(cTexture, strrev(pcSeperator));
+			strcpy_s(cTexture, _strrev(pcSeperator));
 
-		strcat(cTexture, pMaterial->cTexture_1);
+		strcat_s(cTexture, pMaterial->cTexture_1);
 
 		// load textures
 		if (FAILED(m_pRenderDevice->GetSkinManager()->AddTexture(m_puiSkinBuffer[uiCurrentMat], cTexture, false, 0, NULL, 0)))
