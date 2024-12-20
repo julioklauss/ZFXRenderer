@@ -20,10 +20,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\ZFXDI\ZFXInput.h">
+    <ClInclude Include="ZFXInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\ZFXDI\ZFXInputDevice.h">
+    <ClInclude Include="ZFXInputDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

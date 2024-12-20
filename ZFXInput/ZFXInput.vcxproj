@@ -155,8 +155,8 @@
     <ClCompile Include="ZFXInput.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\ZFXDI\ZFXInput.h" />
-    <ClInclude Include="..\ZFXDI\ZFXInputDevice.h" />
+    <ClInclude Include="ZFXInput.h" />
+    <ClInclude Include="ZFXInputDevice.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
