@@ -67,7 +67,7 @@ BOOL ZFXJoystick::EnumJoyCallback(const DIDEVICEINSTANCE* pInst)
 	// try to crank up this one
 	if (SUCCEEDED(CrankUp(pInst->guidInstance, &c_dfDIJoystick))) {
 		m_bJoyFound = true;
-		strcpy(m_Name, (char*)pInst->tszProductName);
+		strcpy_s(m_Name, (char*)pInst->tszProductName);
 		return DIENUM_STOP;
 	}
 	return DIENUM_CONTINUE;
