@@ -31,6 +31,10 @@ class ZFXDIDevice
 		HWND					m_hWnd;
 		long					m_lX;
 		long					m_lY;
+		long					m_lZ;
+		long					m_lRx;		// joystick rotational values
+		long					m_lRy;
+		long					m_lRz;
 		FILE*					m_pLog;
 };	//	class
 
@@ -62,12 +66,12 @@ class ZFXMouse : public ZFXDIDevice
 		HRESULT	Init(void);
 		HRESULT	Update(void);
 
-		void	SetCage(RECT rcCage)	{ m_rcCage = rcCage; }
+		void	SetBounds(RECT rcCage, LONG lMaxScroll, LONG lMinScroll)	{ m_rcCage = rcCage; m_lMaxScroll = lMaxScroll; m_lMinScroll = lMinScroll; }
 
-		bool	IsPressed(UINT nBtn)	{ if (nBtn < MOUSE_BUTTON_LIMIT) return m_bPressed[nBtn];
-											return false; }
-		bool	IsReleased(UINT nBtn)	{ if (nBtn < MOUSE_BUTTON_LIMIT) return m_bReleased[nBtn];
-											return false; }
+		bool	IsPressed(UINT nBtn)									{ if (nBtn < MOUSE_BUTTON_LIMIT) return m_bPressed[nBtn];
+																			return false; }
+		bool	IsReleased(UINT nBtn)									{ if (nBtn < MOUSE_BUTTON_LIMIT) return m_bReleased[nBtn];
+																			return false; }
 	private:
 		HANDLE	m_hEvent;
 		RECT	m_rcCage;
@@ -109,7 +113,7 @@ class ZFXDI : public ZFXInputDevice
 		ZFXDI(HINSTANCE hDLL);
 		~ZFXDI(void);
 
-		HRESULT Init(HWND, const RECT*, bool);
+		HRESULT Init(HWND, const RECT*, LONG, LONG, bool);
 
 		void Release(void);
 		bool IsRunning(void) { return m_bRunning; }

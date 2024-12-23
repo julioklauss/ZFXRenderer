@@ -126,7 +126,7 @@ void ZFXDI::Release()
 	}
 }
 
-HRESULT ZFXDI::Init(HWND hWnd, const RECT* rcMouseCage, bool bSaveLog)
+HRESULT ZFXDI::Init(HWND hWnd, const RECT* rcMouseCage, LONG lMaxScroll, LONG lMinScroll, bool bSaveLog)
 {
 	HRESULT hr;
 	m_hWndMain = hWnd;
@@ -155,7 +155,7 @@ HRESULT ZFXDI::Init(HWND hWnd, const RECT* rcMouseCage, bool bSaveLog)
 		return ZFX_FAIL;
 	}
 	if (rcMouseCage)
-		m_pMouse->SetCage(*rcMouseCage);
+		m_pMouse->SetBounds(*rcMouseCage, lMaxScroll, lMinScroll);
 
 	if (FAILED(m_pJoy->Init())) {
 		if (m_pJoy)

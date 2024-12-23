@@ -15,15 +15,18 @@ ZFXMouse::~ZFXMouse(void)
 HRESULT ZFXMouse::Init(void)
 {
 	// clear memory
-	memset(m_bPressed, 0, sizeof(bool) * 3);
-	memset(m_bReleased, 0, sizeof(bool) * 3);
-	m_lX = m_lY = 0;
+	memset(m_bPressed, 0, sizeof(bool) * MOUSE_BUTTON_LIMIT);
+	memset(m_bReleased, 0, sizeof(bool) * MOUSE_BUTTON_LIMIT);
+	m_lX = m_lY = m_lZ = 0;
 	
 	if (FAILED(CrankUp(GUID_SysMouse, &c_dfDIMouse)))
 		return ZFX_FAIL;
 
 	// event notification
 	if (!(m_hEvent = CreateEvent(NULL, FALSE, FALSE, NULL)))
+		return ZFX_FAIL;
+
+	if (FAILED(m_pDevice->SetEventNotification(m_hEvent)))
 		return ZFX_FAIL;
 
 	// build mouse buffer
@@ -74,6 +77,14 @@ HRESULT ZFXMouse::Update(void)
 					m_lY = m_rcCage.bottom;
 			}	break;
 
+			case DIMOFS_Z: {
+				m_lZ += od[i].dwData;
+				if (m_lZ < m_lMinScroll)
+					m_lZ = m_lMinScroll;
+				if (m_lZ > m_lMaxScroll)
+					m_lZ = m_lMaxScroll;
+			}	break;
+
 			// MOUSE_KEYS
 			case DIMOFS_BUTTON0: {
 				if (od[i].dwData & 0x80) {
@@ -103,6 +114,46 @@ HRESULT ZFXMouse::Update(void)
 					if (m_bPressed[2])
 						m_bReleased[2] = true;
 					m_bPressed[2] = false;
+				}
+			}	break;
+
+			case DIMOFS_BUTTON3: {
+				if (od[i].dwData & 0x80)
+					m_bPressed[3] = true;
+				else {
+					if (m_bPressed[3])
+						m_bReleased[3] = true;
+					m_bPressed[3] = false;
+				}
+			}	break;
+
+			case DIMOFS_BUTTON4: {
+				if (od[i].dwData & 0x80)
+					m_bPressed[4] = true;
+				else {
+					if (m_bPressed[4])
+						m_bReleased[4] = true;
+					m_bPressed[4] = false;
+				}
+			}	break;
+
+			case DIMOFS_BUTTON5: {
+				if (od[i].dwData & 0x80)
+					m_bPressed[5] = true;
+				else {
+					if (m_bPressed[5])
+						m_bReleased[5] = true;
+					m_bPressed[5] = false;
+				}
+			}	break;
+
+			case DIMOFS_BUTTON6: {
+				if (od[i].dwData & 0x80)
+					m_bPressed[6] = true;
+				else {
+					if (m_bPressed[6])
+						m_bReleased[6] = true;
+					m_bPressed[6] = false;
 				}
 			}	break;
 		};	//	swicth

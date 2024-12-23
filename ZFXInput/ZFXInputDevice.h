@@ -1,5 +1,7 @@
 #pragma once
 
+#include <windows.h>
+#include <stdio.h>
 #include <ZFX.h>
 
 class ZFXInputDevice
@@ -23,6 +25,12 @@ class ZFXInputDevice
 		// works with mouse and joystick only
 		virtual HRESULT	GetPosition(ZFXINPUTDEV, POINT*) = 0;
 
+		// works with joystick only (intensity range from - 1 to +1)
+		virtual HRESULT GetPadDeflection(float*, float*) = 0;
+
+		// get chnage in mouse position
+		virtual POINT	GetMouseDelta() = 0;
+
 		// works with keyboard, mouse and joystick
 		virtual bool	IsPressed(ZFXINPUTDEV, UINT) = 0;
 
@@ -31,6 +39,16 @@ class ZFXInputDevice
 };	//	class
 
 typedef class ZFXInputDevice*	LPZFXINPUTEDEVICE;
+/*----------------------------------------------------------------*/
+
+extern "C"
+{
+	HRESULT CreateInputDevice(HINSTANCE hDLL, ZFXInputDevice** pInterface);
+	typedef HRESULT(*CREATEINPUTDEVICE)(HINSTANCE hDLL, ZFXInputDevice** pInterface);
+
+	HRESULT ReleaseInputDevice(ZFXInputDevice** pInterface);
+	typedef HRESULT(*RELEASEINPUTDEVICE)(ZFXInputDevice** pInterface);
+}
 
 // keyboard scan codes from dinput.h
 #define ZVK_ESCAPE          0x01

@@ -25,9 +25,9 @@ HRESULT ZFXJoystick::Init(void)
 	// some initializations
 	memset(m_bPressed, 0, sizeof(m_bPressed));
 	memset(m_bReleased, 0, sizeof(m_bReleased));
-	m_bJoyFound = false;
-	m_lX = m_lY = 0;
-	g_pThis		= this;
+	m_bJoyFound			= false;
+	m_lX = m_lY = m_lZ	= 0;
+	g_pThis				= this;
 
 	// enumerate attached joysticks
 	m_pDI->EnumDevices(DI8DEVCLASS_GAMECTRL, (LPDIENUMDEVICESCALLBACK)gEnumJoyCallback, &m_guid, DIEDFL_ATTACHEDONLY);
@@ -49,11 +49,16 @@ HRESULT ZFXJoystick::Init(void)
 	diprg.diph.dwObj		= DIJOFS_Y;
 	m_pDevice->SetProperty(DIPROP_RANGE, &diprg.diph);
 
+	diprg.diph.dwObj		= DIJOFS_Z;
+	m_pDevice->SetProperty(DIPROP_RANGE, &diprg.diph);
+	
 	// number of buttons
 	if (SUCCEEDED(m_pDevice->GetCapabilities(&diCaps)))
 		m_dwNumBtns = diCaps.dwButtons;
 	else
 		m_dwNumBtns = 4;
+	
+	m_pDevice->Acquire();
 	return ZFX_OK;
 }	//	Init
 
@@ -94,7 +99,11 @@ HRESULT ZFXJoystick::Update(void)
 	}
 
 	// position of the stick
-	m_lX = js.lX;
-	m_lY = js.lY;
+	m_lX	= js.lX;
+	m_lY	= js.lY;
+	m_lZ	= js.lZ;
+	m_lRx	= js.lRx;
+	m_lRy	= js.lRy;
+	m_lRz	= js.lRz;
 	return ZFX_OK;
 }	//	Update
