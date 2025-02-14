@@ -19,4 +19,4 @@ class ZFXAudio
 		HMODULE				m_hDLL;
 };	//	class
 
-typedef class ZFXAUDIO* LPZFXAUDIO
+typedef class ZFXAUDIO* LPZFXAUDIO;
