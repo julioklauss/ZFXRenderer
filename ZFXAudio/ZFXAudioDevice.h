@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Windows.h>
+#include <windows.h>
 #include <stdio.h>
 #include <ZFX.h>
 #include <ZFX3D.h>
@@ -17,7 +17,7 @@ class ZFXAudioDevice
 		virtual ~ZFXAudioDevice(void) {};
 
 		virtual HRESULT	Init(HWND, const char*, bool) = 0;
-		virtual bool	Release(void) = 0;
+		virtual void	Release(void) = 0;
 		virtual bool	IsRunning(void) = 0;
 
 		// stop all audio input
@@ -40,3 +40,15 @@ class ZFXAudioDevice
 		virtual void	SetSoundDirection(ZFXVector, ZFXVector vV, UINT) = 0;
 		virtual void	SetSoundMaxDist(float, UINT) = 0;
 };	//	class
+typedef class ZFXAudioDevice* LPZFXAUDIODEVICE;
+
+/*----------------------------------------------------------------*/
+
+extern "C"
+{
+	HRESULT CreateAudioDevice(HINSTANCE hDLL, ZFXAudioDevice** pInterface);
+	typedef HRESULT(*CREATEAUDIODEVICE)(HINSTANCE hDll, ZFXAudioDevice** pInterface);
+
+	HRESULT ReleaseAudioDevice(ZFXAudioDevice** pInterface);
+	typedef HRESULT(*RELEASEAUDIODEVICE)(ZFXAudioDevice** pInterface);
+}
