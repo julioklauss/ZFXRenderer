@@ -135,7 +135,7 @@ HRESULT ZFXDA::LoadSound(const char* chName, UINT* nID)
 			return ZFX_OUTOFMEMORY;
 	}
 
-	m_pSounds[m_NumSounds].chName = new char[(chName)+1];
+	m_pSounds[m_NumSounds].chName = new char[strlen(chName)+1];
 	memcpy(m_pSounds[m_NumSounds].chName, chName, strlen(chName) + 1);
 
 	m_pSounds[m_NumSounds].bChanged = false;
