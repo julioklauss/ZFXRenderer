@@ -29,8 +29,8 @@ class ZFXSocketObject
 		SOCKET	GetSocket(void) { return m_skSocket; }
 
 		// information about the inbox
-		bool	IsPkgWaiting(void) { return (m_pInbox->GetCount() > 0); }
-		UINT	GetNextPkgSize(void) { return (m_pInbox->GetFrontSize()); }
+		bool	IsPkgWaiting(void)		{ return (m_pInbox->GetCount() > 0); }
+		UINT	GetNextPkgSize(void)	{ return (m_pInbox->GetFrontSize()); }
 		HRESULT	GetNextPkg(ZFXPACKAGE*);
 
 	private:
