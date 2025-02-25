@@ -26,5 +26,11 @@
     <ClInclude Include="ZFXNetworkDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\ZFXAudio\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ZFXAudio\targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

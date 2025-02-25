@@ -155,6 +155,8 @@
     <ClCompile Include="ZFXNetwork.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\ZFXAudio\stdafx.h" />
+    <ClInclude Include="..\ZFXAudio\targetver.h" />
     <ClInclude Include="ZFXNetwork.h" />
     <ClInclude Include="ZFXNetworkDevice.h" />
   </ItemGroup>
