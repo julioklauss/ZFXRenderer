@@ -81,7 +81,7 @@ HRESULT ZFXWS::Init(HWND hWnd, ZFXNETMODE nmd, int nPort, char* pIP, UINT nMaxPk
 	// create socket object as client
 	else if (m_Mode == NMD_CLIENT) {
 		if (strcmp(m_pIP, "") == 0)
-			sprintf(m_pIP, "LOCALHOST");
+			sprintf_s(m_pIP, "LOCALHOST");
 
 		if (FAILED(CreateClient(&m_pSockObj)))
 			return ZFX_FAIL;

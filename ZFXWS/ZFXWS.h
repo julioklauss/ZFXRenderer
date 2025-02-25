@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ZFXNetworkDevice.h>
 #include "ZFXSocketObject.h"
+#include <ZFXNetworkDevice.h>
 
 BOOL WINAPI DllEntryPoint(HINSTANCE hDll, DWORD fdwReason, LPVOID lpvRserved);
 
