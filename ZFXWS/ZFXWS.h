@@ -37,6 +37,7 @@ class ZFXWS : public ZFXNetworkDevice
 		char				m_ClCount;
 		UINT				m_ClID;
 		char*				m_Buffer;
+		FILE*				m_pLog;
 
 		// initializing ZFXSocketObject
 		HRESULT	CreateServer(ZFXSocketObject** ppSkObject);

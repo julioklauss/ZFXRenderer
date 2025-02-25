@@ -153,7 +153,7 @@ HRESULT ZFXWS::CreateClient(ZFXSocketObject** ppSkObject)
 	nEvents |= FD_READ | FD_CLOSE;
 
 	// 3. Step: set Windows notification
-	if (WSAAsyncSelect((*ppSkObject)->GetSocket(), m_hWndMain, WM_CLIENT, nEvents) == SOCKET_ERROR) {
+	if (WSAAsyncSelect((*ppSkObject)->GetSocket(), m_hWndMain, WM_SOCKET, nEvents) == SOCKET_ERROR) {
 		m_pSockObj->Disconnect();
 		return ZFX_FAIL;
 	}

@@ -3,6 +3,7 @@
 #include <WinSock2.h>
 #include "ZFXQueue.h"
 #include <ZFXNetworkDevice.h>
+#include <cstdio>
 
 class ZFXSocketObject
 {
