@@ -66,7 +66,7 @@ HRESULT ZFXWS::Init(HWND hWnd, ZFXNETMODE nmd, int nPort, char* pIP, UINT nMaxPk
 	g_bLF		= bSaveLog;
 
 	if (pIP)
-		sprintf(m_pIP, "%s", pIP);
+		sprintf_s(m_pIP, "%s", pIP);
 
 	wVersion = MAKEWORD(2, 0);
 
@@ -116,7 +116,11 @@ HRESULT ZFXWS::CreateServer(ZFXSocketObject** ppSkObject)
 	nEvents |= FD_READ | FD_WRITE | FD_CONNECT | FD_ACCEPT | FD_CLOSE;
 
 	// 4. Step: set Windows notification
-	if (WSAAsyncSelect((*ppSkObject)->GetSocket(), m_hWndMain, WM_ZFXSERVER, nEvents) == SOCKET_ERROR) {
+	/*if (WSAAsyncSelect((*ppSkObject)->GetSocket(), m_hWndMain, WM_ZFXSERVER, nEvents) == SOCKET_ERROR) {
+		m_pSockObj->Disconnect();
+		return ZFX_FAIL;
+	}*/
+	if (WSAEventSelect((*ppSkObject)->GetSocket(), m_Event, nEvents) == SOCKET_ERROR) {
 		m_pSockObj->Disconnect();
 		return ZFX_FAIL;
 	}
@@ -153,7 +157,11 @@ HRESULT ZFXWS::CreateClient(ZFXSocketObject** ppSkObject)
 	nEvents |= FD_READ | FD_CLOSE;
 
 	// 3. Step: set Windows notification
-	if (WSAAsyncSelect((*ppSkObject)->GetSocket(), m_hWndMain, WM_SOCKET, nEvents) == SOCKET_ERROR) {
+	/*if (WSAAsyncSelect((*ppSkObject)->GetSocket(), m_hWndMain, WM_SOCKET, nEvents) == SOCKET_ERROR) {
+		m_pSockObj->Disconnect();
+		return ZFX_FAIL;
+	}*/
+	if (WSAEventSelect((*ppSkObject)->GetSocket(), m_Event, nEvents) == SOCKET_ERROR) {
 		m_pSockObj->Disconnect();
 		return ZFX_FAIL;
 	}

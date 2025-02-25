@@ -85,19 +85,31 @@ HRESULT ZFXSocketObject::Accept(SOCKET* skToNewClient)
 HRESULT ZFXSocketObject::Connect(char* chServer, int nPort)
 {
 	sockaddr_in	saServerAddress;
-	LPHOSTENT	pHost = NULL;
+	// LPHOSTENT	pHost = NULL;
+	ADDRINFO*	pAddrInfo = NULL;
 
 	// try to find the server
 	memset(&saServerAddress, 0, sizeof(sockaddr_in));
 	saServerAddress.sin_port		= htons(nPort);
 	saServerAddress.sin_family		= AF_INET;
-	saServerAddress.sin_addr.s_addr	= inet_addr(chServer);
+	// saServerAddress.sin_addr.s_addr	= inet_addr(chServer);
+	inet_pton(AF_INET, chServer, &(saServerAddress.sin_addr.s_addr));
 
 	if (saServerAddress.sin_addr.s_addr == INADDR_NONE) {
-		pHost = gethostbyname(chServer);
+		// pHost = gethostbyname(chServer);
+		getaddrinfo(chServer, NULL, NULL, &pAddrInfo);
 
-		if (pHost != NULL) {
+		/* if (pHost != NULL) {
 			saServerAddress.sin_addr.s_addr = ((LPIN_ADDR)pHost->h_addr)->s_addr;
+		} */
+		if (pAddrInfo != NULL) {
+			while (pAddrInfo->ai_family != AF_INET)
+			{
+				if (pAddrInfo->ai_next == NULL)
+					return ZFX_FAIL;
+				pAddrInfo = pAddrInfo->ai_next;
+			}
+			saServerAddress.sin_addr = ((sockaddr_in*)pAddrInfo->ai_addr)->sin_addr;
 		}
 		else
 			return ZFX_FAIL;
