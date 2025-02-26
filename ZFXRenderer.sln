@@ -23,6 +23,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZFXNetwork", "ZFXNetwork\ZF
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZFXWS", "ZFXWS\ZFXWS.vcxproj", "{76DE6FD7-4EFC-41D9-8F94-AB7F4470FAD5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZFXGeneral", "ZFXGeneral\ZFXGeneral.vcxproj", "{8F1DE57D-584D-41B6-9894-F8A34113C72B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -111,6 +113,14 @@ Global
 		{76DE6FD7-4EFC-41D9-8F94-AB7F4470FAD5}.Release|x64.Build.0 = Release|x64
 		{76DE6FD7-4EFC-41D9-8F94-AB7F4470FAD5}.Release|x86.ActiveCfg = Release|Win32
 		{76DE6FD7-4EFC-41D9-8F94-AB7F4470FAD5}.Release|x86.Build.0 = Release|Win32
+		{8F1DE57D-584D-41B6-9894-F8A34113C72B}.Debug|x64.ActiveCfg = Debug|x64
+		{8F1DE57D-584D-41B6-9894-F8A34113C72B}.Debug|x64.Build.0 = Debug|x64
+		{8F1DE57D-584D-41B6-9894-F8A34113C72B}.Debug|x86.ActiveCfg = Debug|Win32
+		{8F1DE57D-584D-41B6-9894-F8A34113C72B}.Debug|x86.Build.0 = Debug|Win32
+		{8F1DE57D-584D-41B6-9894-F8A34113C72B}.Release|x64.ActiveCfg = Release|x64
+		{8F1DE57D-584D-41B6-9894-F8A34113C72B}.Release|x64.Build.0 = Release|x64
+		{8F1DE57D-584D-41B6-9894-F8A34113C72B}.Release|x86.ActiveCfg = Release|Win32
+		{8F1DE57D-584D-41B6-9894-F8A34113C72B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
