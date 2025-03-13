@@ -156,11 +156,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ZFXAabb.cpp" />
+    <ClCompile Include="ZFXBspTree.cpp" />
     <ClCompile Include="zfxcpu.cpp" />
     <ClCompile Include="ZFXMatrix.cpp" />
     <ClCompile Include="ZFXObb.cpp" />
+    <ClCompile Include="ZFXOctree.cpp" />
     <ClCompile Include="ZFXPlane.cpp" />
     <ClCompile Include="ZFXPolygon.cpp" />
+    <ClCompile Include="ZFXPolylist.cpp" />
     <ClCompile Include="ZFXQuat.cpp" />
     <ClCompile Include="ZFXRay.cpp" />
     <ClCompile Include="ZFXVector.cpp" />

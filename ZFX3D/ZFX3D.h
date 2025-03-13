@@ -15,6 +15,18 @@
 #define ZFXVISIBLE	5
 //// END DEFINITIONS
 
+//// OCTREE QUADRANTS
+#define	UP_NE			0	// upper north east
+#define	UP_NW			1	// upper north west
+#define UP_SE			2	// upper south east
+#define	UP_SW			3	// upper south west
+#define	LW_NE			4	// lower north east
+#define LW_NW			5	// lower north west
+#define	LW_SE			6	// lower south east
+#define	LW_SW			7	// lower south west
+#define	POLYS_PER_LEAF	10
+//// END OCTREE QUADRANTS
+
 const double	ZFXPI		= 3.14159265;
 const double	ZFXPI2		= 1.5707963;
 const double	ZFX2PI		= 6.2831853;
@@ -318,5 +330,95 @@ class __declspec(dllexport)	ZFXQuat
 
 		ZFXVector Rotate(const ZFXVector& v);
 };	//	Class
+
+class ZFXPolylist
+{
+	public:
+		ZFXPolylist(void);
+		~ZFXPolylist(void);
+		bool			AddPolygon(const ZFXPolygon&);
+		void			Reset(void);
+		ZFXPolygon*		GetPolylist(void)	{ return m_pPolys; }
+		unsigned int	GetNum(void)	{ return m_Num; }
+	private:
+		ZFXPolygon*		m_pPolys;
+		unsigned int	m_Num;
+		unsigned int	m_Max;
+		bool			CheckMem(void);
+};	//	Class
+/*---------------------------------------------------------*/
+
+class ZFXBspTree
+{
+	public:
+		ZFXBspTree(void);
+		virtual ~ZFXBspTree(void);
+
+		void	BuildTree(const ZFXPolygon*, UINT);
+		void	TraverseBtF(ZFXPolylist*, ZFXVector, const ZFXPlane*);
+		void	TraverseFtB(ZFXPolylist*, ZFXVector, const ZFXPlane*);
+
+		ZFXAabb	GetAabb(void)	{ return m_Aabb; }
+
+		bool	LineOfSight(const ZFXVector&, const ZFXVector&);
+		
+		bool	TestCollision(const ZFXRay&, float, float*, ZFXVector*);
+	private:
+		ZFXAabb		m_Aabb;			// bounding box
+		ZFXPlane	m_Plane;		// splitting plane
+		ZFXBspTree* m_pBack;		// backlist
+		ZFXBspTree* m_pFront;		// frontlist
+		ZFXBspTree* m_pRoot;		// root node
+		ZFXBspTree* m_pParent;		// parent node
+		ZFXPolygon* m_pPolys;		// if leaf node
+		UINT		m_NumPolys;		// if leaf node
+
+		static UINT	m_sNum;			// final poly count
+
+		void CreateChilds(void);
+		bool FindBestSplitter(void);
+		void AddPolygon(const ZFXPolygon&);
+		void CalcBoundingBox(const ZFXPolygon*, UINT);
+		void SetRelationship(ZFXBspTree* R, ZFXBspTree* D)	{ m_pParent = D; m_pRoot = R; }
+		
+		bool IsLeaf(void)	{ return (m_pFront == NULL) && (m_pBack == NULL); }
+};	//	Class
+/*---------------------------------------------------------*/
+
+class ZFXOctree
+{
+	public:
+		ZFXOctree(void);
+		virtual ~ZFXOctree(void);
+
+		void	BuildTree(const ZFXPolygon*, UINT);
+		void	Traverse(ZFXPolylist*, ZFXPolylist*, const ZFXPlane*);
+
+		ZFXAabb	GetAabb(void)	{ return m_Aabb; }
+
+		bool	GetFloor(const ZFXVector&, float*, ZFXPlane*);
+		bool	TestCollision(const ZFXAabb&, ZFXPlane*);
+		bool	TestCollision(const ZFXRay&, float, float*);
+	private:
+		ZFXAabb		m_Aabb;			// bounding box
+		ZFXPolygon* m_pPolys;		// if leaf
+		UINT		m_NumPolys;		// if leaf
+		ZFXOctree*	m_pChild[8];	// 8 children
+		ZFXOctree*	m_pRoot;		// root node
+		ZFXOctree*	m_pParent;		// parent node
+		int			m_Pos;			// NO, NW, ...
+
+		void CalcBoundingBox(const ZFXPolygon*, UINT);
+		void InitChildObject(int ChildID, ZFXOctree* pP);
+		void ChopListToMe(ZFXPolygon*, UINT);
+		void CreateChilds(ZFXOctree* pRoot);
+		void GetAabbAsPolygons(ZFXPolylist*);
+		bool IntersectsDownwardsRay(const ZFXVector&, float);
+
+		bool IsLeaf(void)	{ return (m_pChild[0] == NULL); }
+		void SetBoundingBox(const ZFXAabb& Aabb)	{ memcpy(&m_Aabb, &Aabb, sizeof(ZFXAabb)); }
+};	//	Class
+/*---------------------------------------------------------*/
+
 
 #endif

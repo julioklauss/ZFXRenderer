@@ -47,5 +47,14 @@
     <ClCompile Include="ZFXQuat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ZFXPolylist.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ZFXBspTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ZFXOctree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
