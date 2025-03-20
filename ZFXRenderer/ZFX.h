@@ -198,4 +198,11 @@ typedef enum ZFXINPUTDEV_TYPE
 	IDV_JOYSTICK,
 	IDV_MOUSE
 } ZFXINPUTDEV;
+
+typedef enum ZFXAXIS_TYPE
+{
+	X_AXIS,
+	Y_AXIS,
+	Z_AXIS
+} ZFXAXIS;
 #endif
