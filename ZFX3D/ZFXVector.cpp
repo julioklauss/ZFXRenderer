@@ -80,9 +80,19 @@ ZFXVector ZFXVector::operator + (float f) const
 }
 /*---------------------------------------------------------*/
 
+void ZFXVector::operator += (float f)
+{
+	x += f; y += f;	z += f;
+}
+
 ZFXVector ZFXVector::operator - (float f) const
 {
 	return ZFXVector(x - f, y - f, z - f);
+}
+
+void ZFXVector::operator -= (float f)
+{
+	x -= f; y -= f; z -= f;
 }
 
 ZFXVector ZFXVector::operator / (float f) const
@@ -238,6 +248,14 @@ inline void ZFXVector::Cross(const ZFXVector& u, const ZFXVector& v)
 	}
 }
 /*---------------------------------------------------------*/
+
+ZFXQuat ZFXVector::operator * (const ZFXQuat& q) const
+{
+	return ZFXQuat(q.w * x + q.z * y - q.y * z,
+		q.w * y + q.x * z - q.z * x,
+		q.w * x + q.y * x - q.x * y,
+		-(q.x * x + q.y * y + q.z * z));
+}
 
 ZFXVector ZFXVector::operator * (const ZFXMatrix& m) const
 {

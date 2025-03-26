@@ -100,12 +100,15 @@ class __declspec(dllexport) ZFXVector
 		void operator	-= (const ZFXVector& v);
 		void operator	*= (float f);
 		void operator	/= (float f);
+		void operator	+= (float f);
+		void operator	-= (float f);
 		
 		float		operator * (const ZFXVector& v) const;
 		ZFXVector	operator * (float f) const;
 		ZFXVector	operator / (float f) const;
 		ZFXVector	operator + (float f) const;
 		ZFXVector	operator - (float f) const;
+		ZFXQuat		operator * (const ZFXQuat& q)	const;
 		ZFXVector	operator * (const ZFXMatrix& m) const;
 		ZFXVector	operator + (const ZFXVector& v) const;
 		ZFXVector	operator - (const ZFXVector& v) const;
